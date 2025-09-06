@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"> <!-- Defines character encoding -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Mobile scaling -->
+    <title>BARD 1D Poetry Generator</title>
+    <style>
+        /* General page styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px; /* Limit content width */
+            margin: 0 auto;  /* Centre content horizontally */
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        /* Main container */
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Grid for input deck and generated tags */
+        .element-deck {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Section boxes */
+        .deck-section {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        /* Input area */
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            margin: 10px 0;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+
+        /* Controls area */
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive */
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* Each control group */
+        .control-group {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        /* Button styling */
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Poem output box */
+        #output {
+            white-space: pre-wrap; /* Keep line breaks */
+            line-height: 1.6;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+
+        /* Tag display */
+        .tag {
+            display: inline-block;
+            background-color: #e9ecef;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin: 2px;
+            font-size: 14px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>BARD 1D Poetry Generator</h1>
+        
+        <!-- Element deck input and tag display -->
+        <div class="element-deck">
+            <div class="deck-section">
+                <h2>Element Deck</h2>
+                <textarea id="elementDeck" placeholder="Enter words/phrases, one per line. Add tags in brackets [mood:dark] [theme:nature]">
+sandworm [theme:dune] [mood:mysterious]
+spice melange [theme:dune] [mood:mystical]
+Arrakis calls [theme:dune] [mood:dramatic]
+desert wind [theme:nature] [mood:calm]
+prophecy whispers [theme:mystical] [mood:mysterious]
+Fremen warriors [theme:dune] [mood:strong]
+golden sands [theme:nature] [mood:calm]
+water of life [theme:dune] [mood:mystical]
+crysknife gleams [theme:dune] [mood:dark]
+                </textarea>
+            </div>
+            <div class="deck-section">
+                <h2>Generated Elements</h2>
+                <div id="elementTags"></div> <!-- Shows all tags found -->
+            </div>
+        </div>
+
+        <!-- Controls for filters and settings -->
+        <div class="controls">
+            <div class="control-group">
+                <label>Repetition Decay Rate</label>
+                <input type="range" id="decayRate" min="0" max="100" value="30">
+                <span id="decayValue">30%</span>
+            </div>
+            <div class="control-group">
+                <label>Mood Filter</label>
+                <select id="moodFilter">
+                    <option value="all">All Moods</option>
+                    <option value="mysterious">Mysterious</option>
+                    <option value="mystical">Mystical</option>
+                    <option value="dramatic">Dramatic</option>
+                    <option value="calm">Calm</option>
+                    <option value="dark">Dark</option>
+                    <option value="strong">Strong</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>Theme Filter</label>
+                <select id="themeFilter">
+                    <option value="all">All Themes</option>
+                    <option value="dune">Dune</option>
+                    <option value="nature">Nature</option>
+                    <option value="mystical">Mystical</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Button to generate poem -->
+        <button onclick="generatePoem()">Generate Poem</button>
+        
+        <!-- Output area -->
+        <div id="output"></div>
+    </div>
+
+    <script>
+        /* Represents one element (word/phrase) in the deck */
+        class Element {
+            constructor(text, tags) {
+                this.text = text;    // Element text
+                this.tags = tags;    // Tags like mood, theme
+                this.probability = 1.0; // Selection probability
+            }
+
+            reset() {
+                this.probability = 1.0;
+            }
+
+            decay(rate) {
+                this.probability *= (1 - rate/100); // Reduce probability each time used
+            }
+        }
+
+        /* Main poetry generator */
+        class BARD1D {
+            constructor() {
+                this.elements = [];     // All elements loaded from textarea
+                this.decayRate = 0.3;   // Default decay
+            }
+
+            /* Parse one line into Element with tags */
+            parseElement(line) {
+                const tags = {};
+                const tagPattern = /\[(.*?)\]/g; // Matches [key:value]
+                const text = line.replace(tagPattern, (match, contents) => {
+                    const [key, value] = contents.split(':');
+                    tags[key.trim()] = value.trim();
+                    return ''; // Remove tag from text
+                }).trim();
+
+                return new Element(text, tags);
+            }
+
+            /* Load elements from textarea input */
+            loadElements(text) {
+                this.elements = text.split('\n')
+                    .map(line => line.trim())
+                    .filter(line => line.length > 0)
+                    .map(line => this.parseElement(line));
+            }
+
+            /* Apply mood/theme filters */
+            filterElements(moodFilter, themeFilter) {
+                return this.elements.filter(element => {
+                    const matchesMood = moodFilter === 'all' || element.tags.mood === moodFilter;
+                    const matchesTheme = themeFilter === 'all' || element.tags.theme === themeFilter;
+                    return matchesMood && matchesTheme;
+                });
+            }
+
+            /* Selects an element randomly, weighted by probability */
+            selectElement(availableElements) {
+                if (availableElements.length === 0) return null;
+
+                const totalProbability = availableElements.reduce(
+                    (sum, element) => sum + element.probability, 0
+                );
+
+                let random = Math.random() * totalProbability;
+                
+                for (const element of availableElements) {
+                    random -= element.probability;
+                    if (random <= 0) {
+                        element.decay(this.decayRate); // Apply decay
+                        return element;
+                    }
+                }
+
+                return availableElements[0]; // Fallback
+            }
+
+            /* Generate a poem of given length */
+            generatePoem(length = 10) {
+                const poem = [];
+                const availableElements = [...this.elements];
+                
+                for (let i = 0; i < length; i++) {
+                    const element = this.selectElement(availableElements);
+                    if (element) {
+                        poem.push(element.text);
+                    }
+                }
+
+                return poem.join('\n');
+            }
+        }
+
+        /* Create generator */
+        const bard = new BARD1D();
+
+        /* Update tags display whenever deck changes */
+        function updateElementTags() {
+            const deck = document.getElementById('elementDeck').value;
+            bard.loadElements(deck);
+            
+            const tagsDiv = document.getElementById('elementTags');
+            tagsDiv.innerHTML = '';
+
+            const uniqueTags = new Set();
+            bard.elements.forEach(element => {
+                Object.entries(element.tags).forEach(([key, value]) => {
+                    uniqueTags.add(`${key}:${value}`);
+                });
+            });
+
+            Array.from(uniqueTags).sort().forEach(tag => {
+                const tagSpan = document.createElement('span');
+                tagSpan.className = 'tag';
+                tagSpan.textContent = tag;
+                tagsDiv.appendChild(tagSpan);
+            });
+        }
+
+        /* Generate a poem when button pressed */
+        function generatePoem() {
+            const deck = document.getElementById('elementDeck').value;
+            const decayRate = parseInt(document.getElementById('decayRate').value);
+            const moodFilter = document.getElementById('moodFilter').value;
+            const themeFilter = document.getElementById('themeFilter').value;
+
+            bard.loadElements(deck);
+            bard.decayRate = decayRate / 100;
+
+            let filteredElements = bard.filterElements(moodFilter, themeFilter);
+            if (filteredElements.length === 0) {
+                document.getElementById('output').textContent = "No elements match the selected filters.";
+                return;
+            }
+
+            const poem = bard.generatePoem(8);
+            document.getElementById('output').textContent = poem;
+        }
+
+        // Initialise listeners
+        document.getElementById('elementDeck').addEventListener('input', updateElementTags);
+        document.getElementById('decayRate').addEventListener('input', (e) => {
+            document.getElementById('decayValue').textContent = e.target.value + '%';
+        });
+        updateElementTags(); // First run
+    </script>
+</body>
+</html>

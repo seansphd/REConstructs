@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Letter-Like Shapes Generator</title>
+    <style>
+        /* Basic page styling */
+        body {
+            font-family: Arial, sans-serif; /* Use a clean sans-serif font */
+            max-width: 800px;              /* Limit width for readability */
+            margin: 20px auto;             /* Centre the page */
+            padding: 20px;                 
+            background: #f0f0f0;           /* Light grey background */
+        }
+
+        /* Container for canvas */
+        .canvas-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;            /* Rounded corners */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow */
+        }
+
+        /* Style the canvas */
+        canvas {
+            border: 1px solid #ccc;
+            display: block;                /* Prevent inline behaviour */
+            margin: 20px auto;             /* Centre horizontally */
+        }
+
+        /* Controls above the canvas */
+        .controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Button styling */
+        button {
+            padding: 10px 20px;
+            background: #4CAF50;           /* Green background */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;               /* Show pointer on hover */
+            margin: 5px;
+        }
+        button:hover {
+            background: #45a049;           /* Darker green when hovered */
+        }
+
+        /* Debug info box */
+        .debug {
+            margin-top: 10px;
+            padding: 10px;
+            background: #fff3cd;           /* Yellow highlight */
+            border: 1px solid #ffeeba;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Letter-Like Shapes Generator</h1>
+    
+    <!-- Buttons for interaction -->
+    <div class="controls">
+        <button onclick="generateNewShape()">Generate New Shape</button>
+        <button onclick="debug()">Debug Info</button>
+    </div>
+
+    <!-- Canvas where shapes are drawn -->
+    <div class="canvas-container">
+        <canvas id="shapeCanvas" width="400" height="400"></canvas>
+    </div>
+
+    <!-- Debug info box (hidden by default) -->
+    <div id="debugInfo" class="debug" style="display: none;"></div>
+
+    <script>
+        // Get references to canvas and context
+        const canvas = document.getElementById('shapeCanvas');
+        const ctx = canvas.getContext('2d');
+        let debugOutput = document.getElementById('debugInfo');
+
+        // Class that handles shape generation
+        class ShapeGenerator {
+            constructor(canvas, ctx) {
+                this.canvas = canvas;
+                this.ctx = ctx;
+                this.gridSize = 5;                  // Number of cells per row/col
+                this.cellSize = 60;                 // Size of each grid cell
+                this.margin = 50;                   // Margin around canvas
+                this.strokeWidth = 20;              // Line thickness
+                this.points = [];                   // Stores grid points
+                this.visited = new Array(this.gridSize * this.gridSize).fill(false); // Tracks visited points
+            }
+
+            // Reset and prepare grid
+            initialize() {
+                // Clear the canvas with white background
+                this.ctx.fillStyle = 'white';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Create points grid
+                this.points = [];
+                for (let y = 0; y < this.gridSize; y++) {
+                    for (let x = 0; x < this.gridSize; x++) {
+                        this.points.push({
+                            x: x * this.cellSize + this.margin,
+                            y: y * this.cellSize + this.margin
+                        });
+                    }
+                }
+                // Reset visited points
+                this.visited.fill(false);
+            }
+
+            // Main function to draw a new shape
+            drawShape() {
+                this.initialize();
+
+                // Start from a random point
+                let currentIndex = Math.floor(Math.random() * this.points.length);
+                let path = [currentIndex];
+                this.visited[currentIndex] = true;
+
+                // Build a path by moving to valid neighbours
+                while (path.length < this.points.length) {
+                    let neighbors = this.getValidNeighbors(currentIndex);
+                    if (neighbors.length === 0) break; // Stop if no neighbours
+
+                    // Choose next point randomly from valid neighbours
+                    let nextIndex = neighbors[Math.floor(Math.random() * neighbors.length)];
+                    path.push(nextIndex);
+                    this.visited[nextIndex] = true;
+                    currentIndex = nextIndex;
+                }
+
+                // Draw the path on canvas
+                this.ctx.beginPath();
+                this.ctx.strokeStyle = 'black';
+                this.ctx.lineWidth = this.strokeWidth;
+                this.ctx.lineCap = 'round';
+                this.ctx.lineJoin = 'round';
+
+                // Move to starting point
+                let startPoint = this.points[path[0]];
+                this.ctx.moveTo(startPoint.x, startPoint.y);
+
+                // Draw lines to each subsequent point
+                for (let i = 1; i < path.length; i++) {
+                    let point = this.points[path[i]];
+                    this.ctx.lineTo(point.x, point.y);
+                }
+
+                // Close path back to start
+                this.ctx.lineTo(startPoint.x, startPoint.y);
+                this.ctx.stroke();
+
+                // Return details for debugging
+                return {
+                    pathLength: path.length,
+                    totalPoints: this.points.length
+                };
+            }
+
+            // Find neighbours of the current point
+            getValidNeighbors(currentIndex) {
+                let neighbors = [];
+                let x = currentIndex % this.gridSize;
+                let y = Math.floor(currentIndex / this.gridSize);
+
+                // Check all adjacent cells including diagonals
+                for (let dx = -1; dx <= 1; dx++) {
+                    for (let dy = -1; dy <= 1; dy++) {
+                        if (dx === 0 && dy === 0) continue; // Skip current point
+
+                        let newX = x + dx;
+                        let newY = y + dy;
+                        let newIndex = newY * this.gridSize + newX;
+
+                        // Check bounds and conditions
+                        if (newX >= 0 && newX < this.gridSize &&
+                            newY >= 0 && newY < this.gridSize &&
+                            !this.visited[newIndex] &&
+                            !this.wouldCreateSquare(x, y, newX, newY)) {
+                            neighbors.push(newIndex);
+                        }
+                    }
+                }
+                return neighbors;
+            }
+
+            // Prevents drawing moves that would create closed squares
+            wouldCreateSquare(x1, y1, x2, y2) {
+                let dx = x2 - x1;
+                let dy = y2 - y1;
+
+                // Only applies to diagonal moves
+                if (Math.abs(dx) !== 1 || Math.abs(dy) !== 1) return false;
+
+                // Check both possible squares
+                return (
+                    this.isVisited(x1, y1 + dy) && this.isVisited(x2, y1) ||
+                    this.isVisited(x1 + dx, y1) && this.isVisited(x1, y2)
+                );
+            }
+
+            // Helper to check if a point is already visited
+            isVisited(x, y) {
+                if (x < 0 || x >= this.gridSize || y < 0 || y >= this.gridSize) return false;
+                return this.visited[y * this.gridSize + x];
+            }
+        }
+
+        // Create generator instance
+        let generator = new ShapeGenerator(canvas, ctx);
+
+        // Button handler: generate shape
+        function generateNewShape() {
+            let result = generator.drawShape();
+            console.log(`Generated shape with ${result.pathLength} points out of ${result.totalPoints}`);
+        }
+
+        // Button handler: toggle debug info
+        function debug() {
+            debugOutput.style.display = debugOutput.style.display === 'none' ? 'block' : 'none';
+            debugOutput.innerHTML = `
+                Canvas size: ${canvas.width}x${canvas.height}<br>
+                Grid size: ${generator.gridSize}x${generator.gridSize}<br>
+                Cell size: ${generator.cellSize}<br>
+                Points: ${generator.points.length}
+            `;
+        }
+
+        // Generate first shape automatically when page loads
+        generateNewShape();
+    </script>
+</body>
+</html>

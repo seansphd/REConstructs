@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ART1 System Simulator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: monospace;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .control-group h3 {
+            margin-bottom: 10px;
+            color: #444;
+        }
+
+        .grid-container {
+            overflow: auto;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            background: #fff;
+        }
+
+        #artGrid {
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+
+        #artGrid td {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #eee;
+            text-align: center;
+            font-family: monospace;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        select, input {
+            padding: 5px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .output {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">ART1 System Simulator</h1>
+        
+        <div class="controls">
+            <div class="control-group">
+                <h3>Fixed Constants</h3>
+                <div>Grid Size: 50x50</div>
+                <div>Character Set: ASCII</div>
+            </div>
+            
+            <div class="control-group">
+                <h3>Variables</h3>
+                <select id="shape">
+                    <option value="single">Single Character</option>
+                    <option value="line">Line</option>
+                    <option value="rectangle">Rectangle</option>
+                    <option value="triangle">Triangle</option>
+                </select>
+                <input type="text" id="character" maxlength="1" value="*" placeholder="Character">
+            </div>
+            
+            <div class="control-group">
+                <h3>Actions</h3>
+                <button id="clear">Clear Grid</button>
+                <button id="random">Random Fill</button>
+                <button id="save">Save Pattern</button>
+            </div>
+        </div>
+
+        <div class="grid-container">
+            <table id="artGrid"></table>
+        </div>
+
+        <div class="output">
+            <h3>Pattern Output</h3>
+            <pre id="output"></pre>
+        </div>
+    </div>
+
+    <script>
+        class ART1Simulator {
+            constructor() {
+                this.rows = 50;
+                this.cols = 50;
+                this.grid = Array(this.rows).fill().map(() => Array(this.cols).fill(' '));
+                this.isDrawing = false;
+                this.startCell = null;
+                
+                this.initializeGrid();
+                this.setupEventListeners();
+            }
+
+            initializeGrid() {
+                const table = document.getElementById('artGrid');
+                table.innerHTML = '';
+                
+                for (let i = 0; i < this.rows; i++) {
+                    const row = table.insertRow();
+                    for (let j = 0; j < this.cols; j++) {
+                        const cell = row.insertCell();
+                        cell.dataset.row = i;
+                        cell.dataset.col = j;
+                    }
+                }
+            }
+
+            setupEventListeners() {
+                const grid = document.getElementById('artGrid');
+                
+                grid.addEventListener('mousedown', (e) => {
+                    if (e.target.tagName === 'TD') {
+                        this.isDrawing = true;
+                        this.startCell = {
+                            row: parseInt(e.target.dataset.row),
+                            col: parseInt(e.target.dataset.col)
+                        };
+                        this.draw(e);
+                    }
+                });
+
+                grid.addEventListener('mousemove', (e) => {
+                    if (this.isDrawing && e.target.tagName === 'TD') {
+                        this.draw(e);
+                    }
+                });
+
+                grid.addEventListener('mouseup', () => {
+                    this.isDrawing = false;
+                    this.startCell = null;
+                });
+
+                document.getElementById('clear').addEventListener('click', () => this.clear());
+                document.getElementById('random').addEventListener('click', () => this.randomFill());
+                document.getElementById('save').addEventListener('click', () => this.savePattern());
+            }
+
+            draw(e) {
+                const shape = document.getElementById('shape').value;
+                const char = document.getElementById('character').value || '*';
+                const row = parseInt(e.target.dataset.row);
+                const col = parseInt(e.target.dataset.col);
+
+                switch(shape) {
+                    case 'single':
+                        this.drawPoint(row, col, char);
+                        break;
+                    case 'line':
+                        if (this.startCell) {
+                            this.drawLine(this.startCell.row, this.startCell.col, row, col, char);
+                        }
+                        break;
+                    case 'rectangle':
+                        if (this.startCell) {
+                            this.drawRectangle(this.startCell.row, this.startCell.col, row, col, char);
+                        }
+                        break;
+                    case 'triangle':
+                        if (this.startCell) {
+                            this.drawTriangle(this.startCell.row, this.startCell.col, row, col, char);
+                        }
+                        break;
+                }
+
+                this.updateGrid();
+            }
+
+            drawPoint(row, col, char) {
+                if (row >= 0 && row < this.rows && col >= 0 && col < this.cols) {
+                    this.grid[row][col] = char;
+                }
+            }
+
+            drawLine(startRow, startCol, endRow, endCol, char) {
+                const dx = Math.abs(endCol - startCol);
+                const dy = Math.abs(endRow - startRow);
+                const sx = startCol < endCol ? 1 : -1;
+                const sy = startRow < endRow ? 1 : -1;
+                let err = dx - dy;
+
+                while (true) {
+                    this.drawPoint(startRow, startCol, char);
+                    if (startCol === endCol && startRow === endRow) break;
+                    const e2 = 2 * err;
+                    if (e2 > -dy) {
+                        err -= dy;
+                        startCol += sx;
+                    }
+                    if (e2 < dx) {
+                        err += dx;
+                        startRow += sy;
+                    }
+                }
+            }
+
+            drawRectangle(startRow, startCol, endRow, endCol, char) {
+                const [minRow, maxRow] = [Math.min(startRow, endRow), Math.max(startRow, endRow)];
+                const [minCol, maxCol] = [Math.min(startCol, endCol), Math.max(startCol, endCol)];
+
+                for (let row = minRow; row <= maxRow; row++) {
+                    for (let col = minCol; col <= maxCol; col++) {
+                        this.drawPoint(row, col, char);
+                    }
+                }
+            }
+
+            drawTriangle(startRow, startCol, endRow, endCol, char) {
+                // Draw an isosceles triangle
+                const baseWidth = Math.abs(endCol - startCol);
+                const height = Math.abs(endRow - startRow);
+                const direction = endRow > startRow ? 1 : -1;
+
+                for (let i = 0; i <= height; i++) {
+                    const width = (baseWidth * (height - i)) / height;
+                    const row = startRow + (i * direction);
+                    const startX = startCol - Math.floor(width/2);
+                    const endX = startCol + Math.floor(width/2);
+                    
+                    for (let col = startX; col <= endX; col++) {
+                        this.drawPoint(row, col, char);
+                    }
+                }
+            }
+
+            clear() {
+                this.grid = Array(this.rows).fill().map(() => Array(this.cols).fill(' '));
+                this.updateGrid();
+            }
+
+            randomFill() {
+                const chars = ['*', '+', '#', '@', '&', '%'];
+                for (let i = 0; i < this.rows; i++) {
+                    for (let j = 0; j < this.cols; j++) {
+                        if (Math.random() < 0.3) {
+                            this.grid[i][j] = chars[Math.floor(Math.random() * chars.length)];
+                        }
+                    }
+                }
+                this.updateGrid();
+            }
+
+            updateGrid() {
+                const cells = document.querySelectorAll('#artGrid td');
+                cells.forEach(cell => {
+                    const row = parseInt(cell.dataset.row);
+                    const col = parseInt(cell.dataset.col);
+                    cell.textContent = this.grid[row][col];
+                });
+                this.updateOutput();
+            }
+
+            updateOutput() {
+                const output = document.getElementById('output');
+                output.textContent = this.grid.map(row => row.join('')).join('\n');
+            }
+
+            savePattern() {
+                const pattern = this.grid.map(row => row.join('')).join('\n');
+                const blob = new Blob([pattern], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'art1_pattern.txt';
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+        }
+
+        // Initialize the simulator when the page loads
+        window.addEventListener('load', () => {
+            new ART1Simulator();
+        });
+    </script>
+</body>
+</html>

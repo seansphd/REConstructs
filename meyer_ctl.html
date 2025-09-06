@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Modular Sculpture System (1972 Recreation)</title>
+    <style>
+        /* Basic page styling */
+        body {
+            margin: 0;
+            overflow: hidden; /* Prevent scrolling */
+            font-family: monospace;
+            background: #000; /* Black background */
+            color: #0f0; /* Green text for retro look */
+        }
+        canvas {
+            display: block; /* Fill screen without scrollbars */
+        }
+        /* Controls box styling */
+        #controls {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+            padding: 20px;
+            border: 1px solid #0f0;
+        }
+        .control-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="range"] {
+            width: 200px;
+            margin-bottom: 10px;
+        }
+        button {
+            background: #0f0;
+            color: #000;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0a0;
+        }
+        /* Axis toggle button position */
+        #axis-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Canvas for drawing -->
+    <canvas id="canvas"></canvas>
+    
+    <!-- Controls for sculpture and sound -->
+    <div id="controls">
+        <div class="control-group">
+            <label>Module Length:</label>
+            <input type="range" id="length" min="10" max="100" value="50">
+            
+            <label>Rotation Speed X:</label>
+            <input type="range" id="rotationX" min="-100" max="100" value="0">
+            
+            <label>Rotation Speed Y:</label>
+            <input type="range" id="rotationY" min="-100" max="100" value="0">
+            
+            <label>Rotation Speed Z:</label>
+            <input type="range" id="rotationZ" min="-100" max="100" value="0">
+        </div>
+        
+        <div class="control-group">
+            <button onclick="addModule()">Add Module</button>
+            <button onclick="clearModules()">Clear All</button>
+        </div>
+
+        <div class="control-group">
+            <label>Sound Frequency:</label>
+            <input type="range" id="frequency" min="100" max="2000" value="440">
+            
+            <label>Sound Volume:</label>
+            <input type="range" id="volume" min="0" max="100" value="50">
+        </div>
+    </div>
+
+    <!-- Button to toggle axis visibility -->
+    <button id="axis-toggle" onclick="toggleAxis()">Toggle Axis</button>
+
+    <script>
+        // Canvas setup
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let showAxis = true;
+
+        // Audio setup
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let oscillator = null;
+        let gainNode = null;
+
+        // Adjust canvas size when window resizes
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // 3D projection function
+        function project(x, y, z) {
+            const fov = 100;      // field of view
+            const z_offset = 400; // distance from viewer
+            const scale = fov / (z + z_offset);
+            return {
+                x: x * scale + width / 2,
+                y: y * scale + height / 2
+            };
+        }
+
+        // Module class represents a rectangular 3D block
+        class Module {
+            constructor() {
+                this.length = 50;
+                this.x = 0;
+                this.y = 0;
+                this.z = 0;
+                this.rotX = 0;
+                this.rotY = 0;
+                this.rotZ = 0;
+                this.speedX = 0;
+                this.speedY = 0;
+                this.speedZ = 0;
+            }
+
+            update() {
+                // Increment rotation angles based on speed
+                this.rotX += this.speedX * 0.01;
+                this.rotY += this.speedY * 0.01;
+                this.rotZ += this.speedZ * 0.01;
+            }
+
+            draw() {
+                // Define module vertices
+                const points = [
+                    [-this.length/2, -10, -10],
+                    [ this.length/2, -10, -10],
+                    [ this.length/2,  10, -10],
+                    [-this.length/2,  10, -10],
+                    [-this.length/2, -10,  10],
+                    [ this.length/2, -10,  10],
+                    [ this.length/2,  10,  10],
+                    [-this.length/2,  10,  10]
+                ];
+
+                // Apply rotations
+                const rotatedPoints = points.map(p => {
+                    let [x, y, z] = p;
+                    
+                    // Rotate around X axis
+                    let temp = y;
+                    y = y * Math.cos(this.rotX) - z * Math.sin(this.rotX);
+                    z = temp * Math.sin(this.rotX) + z * Math.cos(this.rotX);
+                    
+                    // Rotate around Y axis
+                    temp = x;
+                    x = x * Math.cos(this.rotY) + z * Math.sin(this.rotY);
+                    z = -temp * Math.sin(this.rotY) + z * Math.cos(this.rotY);
+                    
+                    // Rotate around Z axis
+                    temp = x;
+                    x = x * Math.cos(this.rotZ) - y * Math.sin(this.rotZ);
+                    y = temp * Math.sin(this.rotZ) + y * Math.cos(this.rotZ);
+                    
+                    return [x + this.x, y + this.y, z + this.z];
+                });
+
+                // Draw edges
+                ctx.strokeStyle = '#0f0';
+                ctx.beginPath();
+
+                // Front face
+                for (let i = 0; i < 4; i++) {
+                    const p1 = project(...rotatedPoints[i]);
+                    const p2 = project(...rotatedPoints[(i+1)%4]);
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                }
+
+                // Back face
+                for (let i = 0; i < 4; i++) {
+                    const p1 = project(...rotatedPoints[i+4]);
+                    const p2 = project(...rotatedPoints[((i+1)%4)+4]);
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                }
+
+                // Connecting edges
+                for (let i = 0; i < 4; i++) {
+                    const p1 = project(...rotatedPoints[i]);
+                    const p2 = project(...rotatedPoints[i+4]);
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                }
+
+                ctx.stroke();
+            }
+        }
+
+        // Array to hold all modules
+        const modules = [];
+
+        // Add a new module based on current control settings
+        function addModule() {
+            const module = new Module();
+            module.length = parseInt(document.getElementById('length').value);
+            module.speedX = parseInt(document.getElementById('rotationX').value);
+            module.speedY = parseInt(document.getElementById('rotationY').value);
+            module.speedZ = parseInt(document.getElementById('rotationZ').value);
+            modules.push(module);
+
+            // Start sound if not already playing
+            if (!oscillator) {
+                startSound();
+            }
+        }
+
+        // Remove all modules and stop sound
+        function clearModules() {
+            modules.length = 0;
+            if (oscillator) {
+                stopSound();
+            }
+        }
+
+        // Draw coordinate axes
+        function drawAxis() {
+            if (!showAxis) return;
+
+            const length = 100;
+            
+            // X axis (red)
+            ctx.strokeStyle = '#f00';
+            let p1 = project(-length, 0, 0);
+            let p2 = project(length, 0, 0);
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+
+            // Y axis (green)
+            ctx.strokeStyle = '#0f0';
+            p1 = project(0, -length, 0);
+            p2 = project(0, length, 0);
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+
+            // Z axis (blue)
+            ctx.strokeStyle = '#00f';
+            p1 = project(0, 0, -length);
+            p2 = project(0, 0, length);
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+        }
+
+        // Toggle axis visibility
+        function toggleAxis() {
+            showAxis = !showAxis;
+        }
+
+        // Start audio oscillator
+        function startSound() {
+            oscillator = audioCtx.createOscillator();
+            gainNode = audioCtx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            oscillator.type = 'sine';
+            oscillator.frequency.value = parseInt(document.getElementById('frequency').value);
+            gainNode.gain.value = parseInt(document.getElementById('volume').value) / 100;
+            
+            oscillator.start();
+        }
+
+        // Update oscillator frequency and gain
+        function updateSound() {
+            if (oscillator && gainNode) {
+                oscillator.frequency.value = parseInt(document.getElementById('frequency').value);
+                gainNode.gain.value = parseInt(document.getElementById('volume').value) / 100;
+            }
+        }
+
+        // Stop sound
+        function stopSound() {
+            if (oscillator) {
+                oscillator.stop();
+                oscillator = null;
+                gainNode = null;
+            }
+        }
+
+        // Link sliders to audio update
+        document.getElementById('frequency').addEventListener('input', updateSound);
+        document.getElementById('volume').addEventListener('input', updateSound);
+
+        // Main animation loop
+        function animate() {
+            // Clear canvas
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, width, height);
+
+            // Draw axes if enabled
+            drawAxis();
+
+            // Update and draw each module
+            modules.forEach(module => {
+                module.update();
+                module.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate(); // Start animation loop
+    </script>
+</body>
+</html>

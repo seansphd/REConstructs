@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wave Interference Pattern</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+        }
+        #controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .control-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        input[type="range"] {
+            width: 200px;
+        }
+        canvas {
+            display: block;
+        }
+        #info {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="waveCanvas"></canvas>
+    <div id="controls">
+        <div class="control-group">
+            <label for="amplitude">Wave Amplitude:</label>
+            <input type="range" id="amplitude" min="1" max="20" step="1" value="10">
+        </div>
+        <div class="control-group">
+            <label for="wavelength">Wavelength:</label>
+            <input type="range" id="wavelength" min="20" max="100" step="5" value="50">
+        </div>
+        <div class="control-group">
+            <label for="speed">Animation Speed:</label>
+            <input type="range" id="speed" min="0" max="2" step="0.1" value="1">
+        </div>
+        <div class="control-group">
+            <label>
+                <input type="checkbox" id="showNodes" checked>
+                Show Nodes
+            </label>
+        </div>
+        <div class="control-group">
+            <label>
+                <input type="checkbox" id="showWaves" checked>
+                Show Wave Lines
+            </label>
+        </div>
+        <div class="control-group">
+            <label>
+                <input type="checkbox" id="colorMode" checked>
+                Color Mode
+            </label>
+        </div>
+    </div>
+    <div id="info">
+        Click and drag to pan. Use mouse wheel to zoom.
+    </div>
+
+    <script>
+        const canvas = document.getElementById('waveCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Configuration
+        let amplitude = 10;
+        let wavelength = 50;
+        let speed = 1;
+        let time = 0;
+        let showNodes = true;
+        let showWaves = true;
+        let colorMode = true;
+        let scale = 1;
+        let offsetX = 0;
+        let offsetY = 0;
+        let isDragging = false;
+        let lastX = 0;
+        let lastY = 0;
+
+        // Initialize canvas size
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+
+        // Wave calculation functions
+        function calculateHeight(x, y, t) {
+            const k = 2 * Math.PI / wavelength;
+            const angle1 = k * (x * Math.cos(0) + y * Math.sin(0)) - speed * t;
+            const angle2 = k * (x * Math.cos(2*Math.PI/3) + y * Math.sin(2*Math.PI/3)) - speed * t;
+            const angle3 = k * (x * Math.cos(4*Math.PI/3) + y * Math.sin(4*Math.PI/3)) - speed * t;
+            
+            return amplitude * (Math.cos(angle1) + Math.cos(angle2) + Math.cos(angle3));
+        }
+
+        function isNode(x, y) {
+            const threshold = 0.5;
+            const height = Math.abs(calculateHeight(x, y, 0));
+            return height < threshold;
+        }
+
+        // Drawing functions
+        function drawPoint(x, y, color = 'black', size = 2) {
+            const screenX = (x + offsetX) * scale + canvas.width / 2;
+            const screenY = (y + offsetY) * scale + canvas.height / 2;
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(screenX, screenY, size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function getColorFromHeight(height) {
+            const normalizedHeight = (height + amplitude * 3) / (amplitude * 6);
+            const hue = normalizedHeight * 240; // Blue to Red spectrum
+            return `hsl(${hue}, 70%, 50%)`;
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Calculate visible area
+            const viewportWidth = canvas.width / scale;
+            const viewportHeight = canvas.height / scale;
+            const startX = -viewportWidth/2 - offsetX;
+            const startY = -viewportHeight/2 - offsetY;
+            const endX = viewportWidth/2 - offsetX;
+            const endY = viewportHeight/2 - offsetY;
+            
+            // Draw interference pattern
+            const resolution = Math.max(2, Math.floor(10 / scale));
+            for (let x = startX; x < endX; x += resolution) {
+                for (let y = startY; y < endY; y += resolution) {
+                    const height = calculateHeight(x, y, time);
+                    
+                    if (colorMode) {
+                        const color = getColorFromHeight(height);
+                        drawPoint(x, y, color, resolution * scale);
+                    } else {
+                        const intensity = Math.floor((height + amplitude * 3) / (amplitude * 6) * 255);
+                        drawPoint(x, y, `rgb(${intensity},${intensity},${intensity})`, resolution * scale);
+                    }
+                }
+            }
+
+            // Draw nodes
+            if (showNodes) {
+                const nodeSpacing = wavelength / 2;
+                for (let x = startX - (startX % nodeSpacing); x < endX; x += nodeSpacing) {
+                    for (let y = startY - (startY % nodeSpacing); y < endY; y += nodeSpacing) {
+                        if (isNode(x, y)) {
+                            drawPoint(x, y, 'red', 3);
+                        }
+                    }
+                }
+            }
+
+            // Draw wave lines
+            if (showWaves) {
+                const angles = [0, 2*Math.PI/3, 4*Math.PI/3];
+                ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+                ctx.lineWidth = 1;
+                
+                angles.forEach(angle => {
+                    for (let d = -1000; d < 1000; d += wavelength) {
+                        ctx.beginPath();
+                        const cos = Math.cos(angle);
+                        const sin = Math.sin(angle);
+                        
+                        for (let t = -1000; t < 1000; t++) {
+                            const x = t * sin + d * cos;
+                            const y = -t * cos + d * sin;
+                            const screenX = (x + offsetX) * scale + canvas.width / 2;
+                            const screenY = (y + offsetY) * scale + canvas.height / 2;
+                            
+                            if (t === -1000) {
+                                ctx.moveTo(screenX, screenY);
+                            } else {
+                                ctx.lineTo(screenX, screenY);
+                            }
+                        }
+                        ctx.stroke();
+                    }
+                });
+            }
+        }
+
+        // Animation loop
+        function animate() {
+            time += 0.05;
+            draw();
+            requestAnimationFrame(animate);
+        }
+
+        // Event listeners
+        window.addEventListener('resize', resizeCanvas);
+
+        document.getElementById('amplitude').addEventListener('input', (e) => {
+            amplitude = parseFloat(e.target.value);
+        });
+
+        document.getElementById('wavelength').addEventListener('input', (e) => {
+            wavelength = parseFloat(e.target.value);
+        });
+
+        document.getElementById('speed').addEventListener('input', (e) => {
+            speed = parseFloat(e.target.value);
+        });
+
+        document.getElementById('showNodes').addEventListener('change', (e) => {
+            showNodes = e.target.checked;
+        });
+
+        document.getElementById('showWaves').addEventListener('change', (e) => {
+            showWaves = e.target.checked;
+        });
+
+        document.getElementById('colorMode').addEventListener('change', (e) => {
+            colorMode = e.target.checked;
+        });
+
+        canvas.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            lastX = e.clientX;
+            lastY = e.clientY;
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                const deltaX = e.clientX - lastX;
+                const deltaY = e.clientY - lastY;
+                offsetX += deltaX / scale;
+                offsetY += deltaY / scale;
+                lastX = e.clientX;
+                lastY = e.clientY;
+            }
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        canvas.addEventListener('mouseleave', () => {
+            isDragging = false;
+        });
+
+        canvas.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+            scale *= zoomFactor;
+            
+            // Zoom toward mouse position
+            const mouseX = e.clientX - canvas.width / 2;
+            const mouseY = e.clientY - canvas.height / 2;
+            offsetX = (offsetX * scale + mouseX * (1 - zoomFactor)) / scale;
+            offsetY = (offsetY * scale + mouseY * (1 - zoomFactor)) / scale;
+        });
+
+        // Start animation
+        animate();
+    </script>
+</body>
+</html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Digital Modular Sculpture</title>
+    <style>
+        /* Reset margins, centre content, apply terminal-like styling */
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+            color: #0f0;
+            font-family: monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        /* Fullscreen canvas behind content */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        /* 3D perspective container */
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            perspective: 1000px;
+        }
+        
+        /* Basic style for modules (cubes or panels) */
+        .module {
+            position: absolute;
+            transform-style: preserve-3d;
+            border: 1px solid #0f0;
+            background: rgba(0, 255, 0, 0.1);
+            opacity: 0.7;
+            transition: opacity 0.3s;
+            width: 100px;
+            height: 100px;
+        }
+        
+        /* Control panel styling */
+        #controls {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border: 1px solid #0f0;
+            z-index: 1000;
+        }
+        
+        .control-group {
+            margin-bottom: 10px;
+        }
+        
+        label {
+            display: inline-block;
+            width: 120px;
+        }
+        
+        input[type="range"] {
+            width: 150px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background canvas for grid effects -->
+    <div id="canvas-container">
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <!-- 3D container for modules -->
+    <div id="container"></div>
+
+    <!-- Control panel -->
+    <div id="controls">
+        <div class="control-group">
+            <label>Number of Modules:</label>
+            <input type="range" id="moduleCount" min="1" max="10" value="5">
+            <span id="moduleCountValue">5</span>
+        </div>
+        <div class="control-group">
+            <label>Rotation Speed:</label>
+            <input type="range" id="rotationSpeed" min="0" max="100" value="50">
+            <span id="rotationSpeedValue">50</span>
+        </div>
+        <div class="control-group">
+            <label>Size Variation:</label>
+            <input type="range" id="sizeVariation" min="0" max="100" value="50">
+            <span id="sizeVariationValue">50</span>
+        </div>
+        <div class="control-group">
+            <label>Sound Frequency:</label>
+            <input type="range" id="soundFreq" min="20" max="2000" value="440">
+            <span id="soundFreqValue">440</span>
+        </div>
+    </div>
+
+    <script>
+        // Audio system variables
+        let audioCtx = null;
+        let oscillator = null;
+
+        // Create an audio context and oscillator on first click
+        function initAudio() {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            gainNode.gain.value = 0.1; // Lower volume
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+        }
+
+        // Each module is a visual element in 3D space
+        class Module {
+            constructor(container, index) {
+                this.element = document.createElement('div');
+                this.element.className = 'module';
+                this.index = index;
+                container.appendChild(this.element);
+                
+                // Random starting position
+                this.position = {
+                    x: (Math.random() - 0.5) * 800,
+                    y: (Math.random() - 0.5) * 600,
+                    z: (Math.random() - 0.5) * 800
+                };
+                
+                // Random starting rotation
+                this.rotation = {
+                    x: Math.random() * 360,
+                    y: Math.random() * 360,
+                    z: Math.random() * 360
+                };
+                
+                // Random velocity for movement
+                this.velocity = {
+                    x: (Math.random() - 0.5) * 2,
+                    y: (Math.random() - 0.5) * 2,
+                    z: (Math.random() - 0.5) * 2
+                };
+            }
+
+            update(deltaTime, controls) {
+                // Update position using velocity
+                this.position.x += this.velocity.x * deltaTime * 0.1;
+                this.position.y += this.velocity.y * deltaTime * 0.1;
+                this.position.z += this.velocity.z * deltaTime * 0.1;
+
+                // Bounce if too far from centre
+                if (Math.abs(this.position.x) > 500) this.velocity.x *= -1;
+                if (Math.abs(this.position.y) > 300) this.velocity.y *= -1;
+                if (Math.abs(this.position.z) > 400) this.velocity.z *= -1;
+
+                // Apply rotation
+                const rotSpeed = controls.rotationSpeed * 0.001;
+                this.rotation.x += rotSpeed * deltaTime;
+                this.rotation.y += rotSpeed * deltaTime;
+                this.rotation.z += rotSpeed * deltaTime;
+
+                // Scale using sine wave for size variation
+                const baseSize = 100;
+                const variation = Math.sin(Date.now() * 0.001 + this.index) * controls.sizeVariation;
+                const scale = (baseSize + variation) / 100;
+
+                // CSS transform to position, rotate and scale
+                const transform = `
+                    translate3d(${this.position.x}px, ${this.position.y}px, ${this.position.z}px)
+                    rotateX(${this.rotation.x}deg)
+                    rotateY(${this.rotation.y}deg)
+                    rotateZ(${this.rotation.z}deg)
+                    scale3d(${scale}, ${scale}, ${scale})
+                `;
+                
+                this.element.style.transform = transform;
+                
+                // Depth-based opacity
+                const opacity = 1 - Math.abs(this.position.z) / 1000;
+                this.element.style.opacity = Math.max(0.2, opacity);
+            }
+        }
+
+        // Main application controller
+        class ModularSculpture {
+            constructor() {
+                this.container = document.getElementById('container');
+                this.canvas = document.getElementById('canvas');
+                this.ctx = this.canvas.getContext('2d');
+                
+                this.modules = [];
+                this.controls = {
+                    moduleCount: 5,
+                    rotationSpeed: 50,
+                    sizeVariation: 50,
+                    soundFreq: 440
+                };
+                
+                this.resizeCanvas();
+                window.addEventListener('resize', () => this.resizeCanvas());
+                
+                this.setupControls();
+                this.setupModules();
+                this.lastTime = Date.now();
+                
+                this.animate();
+            }
+
+            // Adjust canvas size on resize
+            resizeCanvas() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+
+            // Link sliders to controls
+            setupControls() {
+                Object.keys(this.controls).forEach(control => {
+                    const slider = document.getElementById(control);
+                    const value = document.getElementById(`${control}Value`);
+                    
+                    slider.addEventListener('input', (e) => {
+                        this.controls[control] = parseFloat(e.target.value);
+                        value.textContent = e.target.value;
+                        
+                        // If number of modules changes, reset them
+                        if (control === 'moduleCount') {
+                            this.setupModules();
+                        }
+                        
+                        // If frequency changes, update oscillator
+                        if (control === 'soundFreq' && oscillator) {
+                            oscillator.frequency.setValueAtTime(this.controls.soundFreq, audioCtx.currentTime);
+                        }
+                    });
+                });
+
+                // Start audio on first user interaction
+                document.addEventListener('click', () => {
+                    if (!audioCtx) initAudio();
+                }, { once: true });
+            }
+
+            // Create modules
+            setupModules() {
+                this.modules.forEach(module => {
+                    module.element.remove();
+                });
+                this.modules = [];
+
+                for (let i = 0; i < this.controls.moduleCount; i++) {
+                    this.modules.push(new Module(this.container, i));
+                }
+            }
+
+            // Draw animated background grid
+            drawBackground() {
+                if (!this.ctx) return;
+                
+                // Fade out old frame
+                this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+                // Green grid lines
+                this.ctx.strokeStyle = '#0f0';
+                this.ctx.lineWidth = 0.5;
+                this.ctx.beginPath();
+                
+                const gridSize = 50;
+                const time = Date.now() * 0.001;
+                
+                for (let x = 0; x < this.canvas.width; x += gridSize) {
+                    const offset = Math.sin(x * 0.01 + time) * 20;
+                    this.ctx.moveTo(x, 0);
+                    this.ctx.lineTo(x, this.canvas.height + offset);
+                }
+                
+                for (let y = 0; y < this.canvas.height; y += gridSize) {
+                    const offset = Math.cos(y * 0.01 + time) * 20;
+                    this.ctx.moveTo(0, y);
+                    this.ctx.lineTo(this.canvas.width + offset, y);
+                }
+                
+                this.ctx.stroke();
+            }
+
+            // Animation loop
+            animate() {
+                const currentTime = Date.now();
+                const deltaTime = currentTime - this.lastTime;
+                this.lastTime = currentTime;
+
+                // Update modules
+                this.modules.forEach(module => {
+                    module.update(deltaTime, this.controls);
+                });
+
+                // Update background
+                this.drawBackground();
+
+                // Adjust oscillator frequency based on depth of modules
+                if (oscillator) {
+                    const avgZ = this.modules.reduce((sum, module) => 
+                        sum + module.position.z, 0) / this.modules.length;
+                    const freqOffset = avgZ * 0.5;
+                    oscillator.frequency.setValueAtTime(
+                        this.controls.soundFreq + freqOffset,
+                        audioCtx.currentTime
+                    );
+                }
+
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // Start program on load
+        window.addEventListener('load', () => {
+            new ModularSculpture();
+        });
+    </script>
+</body>
+</html>

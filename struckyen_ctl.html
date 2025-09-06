@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Container that wraps the whole app */
+        .container {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: #f5f5f5;
+        }
+
+        /* Section for buttons and controls */
+        .controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        /* Grid for arranging modules */
+        .pattern-grid {
+            display: grid;
+            gap: 1px; /* spacing between modules */
+            background: #ddd;
+            width: fit-content;
+        }
+
+        /* Each module is a 2x2 square */
+        .module {
+            width: 20px;
+            height: 20px;
+            background: white;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+        }
+
+        /* Base cell inside each module */
+        .cell {
+            background: white;
+        }
+
+        /* Filled cells are coloured black */
+        .cell.filled {
+            background: black;
+        }
+
+        /* Style for the buttons */
+        button {
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+
+        /* Wrapper for different grids shown side by side */
+        .patterns {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* Each pattern section (title + grid) */
+        .pattern-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Struycken Pattern Generator</h2>
+        
+        <!-- Buttons to generate different patterns -->
+        <div class="controls">
+            <button onclick="generateDiagonalPattern()">Generate Diagonal Pattern</button>
+            <button onclick="generateRandomPattern()">Generate Random Pattern</button>
+            <button onclick="generateBlockPattern()">Generate Block Pattern</button>
+        </div>
+
+        <!-- Section showing base modules and generated patterns -->
+        <div class="patterns">
+            <div class="pattern-container">
+                <h3>Base Modules</h3>
+                <div id="baseModules" class="pattern-grid"></div>
+            </div>
+            
+            <div class="pattern-container">
+                <h3>Generated Pattern</h3>
+                <div id="patternGrid" class="pattern-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* Definitions for modules: 2x2 grids represented as arrays of 1s and 0s */
+        const moduleDefinitions = [
+            [1,1,1,1], [0,0,0,0], [1,0,0,0], [0,1,0,0],
+            [0,0,1,0], [0,0,0,1], [1,1,0,0], [0,0,1,1],
+            [1,0,1,0], [0,1,0,1], [1,1,1,0], [0,1,1,1],
+            [1,0,1,1], [1,1,0,1], [1,0,0,1], [0,1,1,0]
+        ];
+
+        /* Create a DOM element for a module based on its definition */
+        function createModule(definition) {
+            const module = document.createElement('div');
+            module.className = 'module';
+            for (let i = 0; i < 4; i++) {
+                const cell = document.createElement('div');
+                cell.className = `cell ${definition[i] ? 'filled' : ''}`;
+                module.appendChild(cell);
+            }
+            return module;
+        }
+
+        /* Render all base modules into the baseModules grid */
+        function renderBaseModules() {
+            const container = document.getElementById('baseModules');
+            container.style.gridTemplateColumns = 'repeat(8, 20px)'; // 8 modules per row
+            moduleDefinitions.forEach(def => {
+                container.appendChild(createModule(def));
+            });
+        }
+
+        /* Shuffle an array in place */
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        /* Generate a diagonal pattern */
+        function generateDiagonalPattern() {
+            const grid = document.getElementById('patternGrid');
+            grid.innerHTML = '';
+            const size = 16; // grid size 16x16
+            grid.style.gridTemplateColumns = `repeat(${size}, 20px)`;
+
+            for (let i = 0; i < size; i++) {
+                for (let j = 0; j < size; j++) {
+                    const moduleIndex = (i + j) % 4; // repeats diagonally
+                    const selectedModule = moduleDefinitions[moduleIndex];
+                    grid.appendChild(createModule(selectedModule));
+                }
+            }
+        }
+
+        /* Generate a random pattern */
+        function generateRandomPattern() {
+            const grid = document.getElementById('patternGrid');
+            grid.innerHTML = '';
+            const size = 16;
+            grid.style.gridTemplateColumns = `repeat(${size}, 20px)`;
+
+            for (let i = 0; i < size * size; i++) {
+                const randomIndex = Math.floor(Math.random() * moduleDefinitions.length);
+                grid.appendChild(createModule(moduleDefinitions[randomIndex]));
+            }
+        }
+
+        /* Generate a block pattern with shuffled groups */
+        function generateBlockPattern() {
+            const grid = document.getElementById('patternGrid');
+            grid.innerHTML = '';
+            const gridSize = 16;
+            const blockSize = 2; // each block is 2x2 modules
+            grid.style.gridTemplateColumns = `repeat(${gridSize}, 20px)`;
+            const pattern = [0, 1, 2, 3]; // indices to shuffle
+
+            for (let i = 0; i < gridSize; i += blockSize) {
+                for (let j = 0; j < gridSize; j += blockSize) {
+                    const shuffledPattern = shuffleArray([...pattern]); // copy and shuffle
+                    for (let bi = 0; bi < blockSize; bi++) {
+                        for (let bj = 0; bj < blockSize; bj++) {
+                            const moduleIndex = shuffledPattern[bi * blockSize + bj];
+                            grid.appendChild(createModule(moduleDefinitions[moduleIndex]));
+                        }
+                    }
+                }
+            }
+        }
+
+        /* Initialise: render base modules and draw default diagonal pattern */
+        renderBaseModules();
+        generateDiagonalPattern();
+    </script>
+</body>
+</html>

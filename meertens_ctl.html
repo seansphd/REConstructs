@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letter-like Shapes Generator</title>
+    <style>
+        /* General page layout */
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        /* Control panel styling */
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Layout for grids */
+        .grid-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        /* Single grid box */
+        .grid {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Row in the grid */
+        .grid-row {
+            display: flex;
+        }
+
+        /* Individual grid cells */
+        .grid-cell {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #ddd;
+            margin: 2px;
+            position: relative;
+            transition: background-color 0.3s;
+        }
+
+        /* Active cell (part of path) */
+        .grid-cell.active {
+            background-color: #2563eb;
+        }
+
+        /* Path segment between cells */
+        .path-segment {
+            position: absolute;
+            background-color: #2563eb;
+            transition: opacity 0.3s;
+        }
+
+        /* Horizontal connector line */
+        .horizontal {
+            height: 4px;
+            width: 44px;
+            top: 18px;
+            left: -2px;
+        }
+
+        /* Vertical connector line */
+        .vertical {
+            width: 4px;
+            height: 44px;
+            left: 18px;
+            top: -2px;
+        }
+
+        /* Buttons */
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        button:disabled {
+            background: #93c5fd;
+            cursor: not-allowed;
+        }
+
+        /* Status messages */
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+    </style>
+</head>
+<body>
+    <!-- Control panel with settings -->
+    <div class="controls">
+        <h1>Letter-like Shapes Generator</h1>
+        <p>Generate letter-like shapes using a minimal tour algorithm on a grid.</p>
+        <div>
+            <!-- Input for rows and columns -->
+            <label for="rows">Rows:</label>
+            <input type="number" id="rows" value="5" min="2" max="8">
+            <label for="cols">Columns:</label>
+            <input type="number" id="cols" value="6" min="2" max="8">
+
+            <!-- Buttons for actions -->
+            <button id="generate">Generate Shapes</button>
+            <button id="next">Next Solution</button>
+            <button id="clear">Clear</button>
+        </div>
+        <div id="status" class="status"></div>
+    </div>
+
+    <!-- Container where grids will be displayed -->
+    <div id="grid-container" class="grid-container"></div>
+
+    <script>
+        /* Class for generating letter-like paths */
+        class LetterShapeGenerator {
+            constructor(rows, cols) {
+                this.rows = rows;
+                this.cols = cols;
+                this.solutions = [];       // Stores all valid paths
+                this.currentSolution = 0;  // Index of current solution
+                this.visited = new Set();  // Track visited cells
+                this.path = [];            // Current path being built
+            }
+
+            /* Check if coordinates are inside the grid */
+            isValidPoint(x, y) {
+                return x >= 0 && x < this.rows && y >= 0 && y < this.cols;
+            }
+
+            /* Create unique key for coordinates */
+            getKey(x, y) {
+                return `${x},${y}`;
+            }
+
+            /* Get valid neighbours of a cell */
+            getNeighbors(x, y) {
+                const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+                return directions
+                    .map(([dx, dy]) => [x + dx, y + dy])
+                    .filter(([nx, ny]) => this.isValidPoint(nx, ny));
+            }
+
+            /* Manhattan distance between two points */
+            distance(x1, y1, x2, y2) {
+                return Math.abs(x1 - x2) + Math.abs(y1 - y2);
+            }
+
+            /* Start finding all solutions */
+            async findSolutions(startX = 0, startY = 0) {
+                this.solutions = [];
+                this.visited = new Set();
+                this.path = [];
+                await this.findPath(startX, startY);
+                return this.solutions;
+            }
+
+            /* Recursive backtracking search for paths */
+            async findPath(x, y, depth = 0) {
+                const key = this.getKey(x, y);
+                this.visited.add(key);
+                this.path.push([x, y]);
+
+                if (depth === this.rows * this.cols - 1) {
+                    // If path covers all cells, check if it loops to start
+                    const [startX, startY] = this.path[0];
+                    const neighbors = this.getNeighbors(x, y);
+                    if (neighbors.some(([nx, ny]) => nx === startX && ny === startY)) {
+                        this.solutions.push([...this.path]);
+                    }
+                } else {
+                    // Explore unvisited neighbours
+                    const neighbors = this.getNeighbors(x, y)
+                        .filter(([nx, ny]) => !this.visited.has(this.getKey(nx, ny)))
+                        .sort((a, b) => {
+                            const [ax, ay] = a;
+                            const [bx, by] = b;
+                            return this.distance(ax, ay, x, y) - this.distance(bx, by, x, y);
+                        });
+
+                    for (const [nx, ny] of neighbors) {
+                        await this.findPath(nx, ny, depth + 1);
+                        if (this.solutions.length >= 10) break; // Limit to 10 solutions
+                    }
+                }
+
+                // Backtrack
+                this.visited.delete(key);
+                this.path.pop();
+            }
+        }
+
+        /* Class to handle user interface */
+        class LetterShapeUI {
+            constructor() {
+                this.generator = null;
+                this.currentSolution = 0;
+                this.setupEventListeners();
+            }
+
+            /* Attach button event handlers */
+            setupEventListeners() {
+                document.getElementById('generate').addEventListener('click', () => this.generate());
+                document.getElementById('next').addEventListener('click', () => this.showNextSolution());
+                document.getElementById('clear').addEventListener('click', () => this.clear());
+            }
+
+            /* Generate solutions for the given grid */
+            async generate() {
+                const rows = parseInt(document.getElementById('rows').value);
+                const cols = parseInt(document.getElementById('cols').value);
+
+                // Check if grid has even number of cells (Hamiltonian cycle requirement)
+                if ((rows * cols) % 2 !== 0) {
+                    this.showStatus('Grid must have an even number of points.', 'error');
+                    return;
+                }
+
+                this.showStatus('Generating solutions...', 'success');
+                this.generator = new LetterShapeGenerator(rows, cols);
+                const solutions = await this.generator.findSolutions();
+
+                if (solutions.length === 0) {
+                    this.showStatus('No solutions found.', 'error');
+                    return;
+                }
+
+                this.currentSolution = 0;
+                this.showStatus(`Found ${solutions.length} solutions.`, 'success');
+                this.displaySolution();
+            }
+
+            /* Cycle through available solutions */
+            showNextSolution() {
+                if (!this.generator || this.generator.solutions.length === 0) return;
+                this.currentSolution = (this.currentSolution + 1) % this.generator.solutions.length;
+                this.displaySolution();
+            }
+
+            /* Clear the grid display */
+            clear() {
+                document.getElementById('grid-container').innerHTML = '';
+                this.showStatus('', '');
+            }
+
+            /* Display a solution path on the grid */
+            displaySolution() {
+                const container = document.getElementById('grid-container');
+                container.innerHTML = '';
+
+                const grid = document.createElement('div');
+                grid.className = 'grid';
+
+                const solution = this.generator.solutions[this.currentSolution];
+
+                // Build grid structure
+                for (let i = 0; i < this.generator.rows; i++) {
+                    const row = document.createElement('div');
+                    row.className = 'grid-row';
+
+                    for (let j = 0; j < this.generator.cols; j++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'grid-cell';
+                        row.appendChild(cell);
+                    }
+                    grid.appendChild(row);
+                }
+
+                // Draw solution path between cells
+                for (let i = 0; i < solution.length - 1; i++) {
+                    const [x1, y1] = solution[i];
+                    const [x2, y2] = solution[i + 1];
+                    this.drawPathSegment(grid, x1, y1, x2, y2);
+                }
+
+                // Close loop back to start
+                const [startX, startY] = solution[0];
+                const [endX, endY] = solution[solution.length - 1];
+                this.drawPathSegment(grid, endX, endY, startX, startY);
+
+                container.appendChild(grid);
+            }
+
+            /* Draw connecting segment between two cells */
+            drawPathSegment(grid, x1, y1, x2, y2) {
+                const cell1 = grid.children[x1].children[y1];
+                const cell2 = grid.children[x2].children[y2];
+
+                cell1.classList.add('active');
+                cell2.classList.add('active');
+
+                const segment = document.createElement('div');
+                segment.className = 'path-segment';
+
+                if (x1 === x2) {
+                    segment.classList.add('horizontal');
+                    if (y1 > y2) {
+                        cell2.appendChild(segment);
+                    } else {
+                        cell1.appendChild(segment);
+                    }
+                } else {
+                    segment.classList.add('vertical');
+                    if (x1 > x2) {
+                        cell2.appendChild(segment);
+                    } else {
+                        cell1.appendChild(segment);
+                    }
+                }
+            }
+
+            /* Show feedback to user */
+            showStatus(message, type) {
+                const status = document.getElementById('status');
+                status.textContent = message;
+                status.className = `status ${type}`;
+            }
+        }
+
+        /* Start the UI */
+        const ui = new LetterShapeUI();
+    </script>
+</body>
+</html>
