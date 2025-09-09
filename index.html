@@ -1,409 +1,335 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Systems Thinking × Early Computer Art</title>
-  <meta name="color-scheme" content="light" />
-  <style>
-    :root {
-      --bg: #ffffff;
-      --text: #111827;
-      --muted: #6b7280;
-      --border: #e5e7eb;
-      --soft: #f3f4f6;
-      --brand: #111827;
-      --radius: 16px;
-      --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
-    }
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.55;
-    }
-    a { color: inherit; text-decoration: none; }
-    img { max-width: 100%; display: block; }
-
-    /* Layout */
-    .container { max-width: 1120px; margin: 0 auto; padding: 0 1rem; }
-    header.site {
-      position: sticky; top: 0; z-index: 50;
-      background: rgba(255,255,255,.8);
-      backdrop-filter: saturate(180%) blur(8px);
-      border-bottom: 1px solid var(--border);
-    }
-    .site-row { display: flex; align-items: center; gap: .75rem; padding: .9rem 0; }
-    .logo { height: 36px; width: 36px; border-radius: 12px; background: var(--brand); color: #fff; display: grid; place-items: center; font-size: .9rem; font-weight: 700; }
-    .title { margin: 0; font-size: 1.125rem; font-weight: 700; letter-spacing: -.01em; }
-    .subtitle { margin: .1rem 0 0 0; font-size: .875rem; color: var(--muted); }
-    nav.site { margin-left: auto; display: none; gap: .4rem; }
-    nav.site a { padding: .35rem .75rem; border-radius: 999px; }
-    nav.site a:hover { background: var(--soft); }
-    @media (min-width: 768px) { nav.site { display: flex; } }
-
-    section { border-top: 1px solid var(--border); scroll-margin-top: 90px; }
-    .pad { padding: 3.2rem 0; }
-    .lead { font-size: 1rem; color: #374151; }
-    h2.section { font-size: clamp(1.4rem, 2.8vw, 2rem); margin: 0 0 .75rem 0; letter-spacing: -.01em; }
-
-    /* Hero two column */
-    .grid-hero { display: grid; gap: 2rem; }
-    @media (min-width: 900px) { .grid-hero { grid-template-columns: 1fr .8fr; } }
-
-    /* Info card */
-    .card { border: 1px solid var(--border); border-radius: calc(var(--radius) + 4px); padding: 1.25rem; box-shadow: var(--shadow); background: #fff; }
-
-    /* Buttons */
-    .btn { display: inline-flex; align-items: center; gap: .5rem; padding: .55rem .9rem; border-radius: 14px; font-size: .95rem; }
-    .btn-outline { border: 1px solid #d1d5db; background: #fff; }
-    .btn-outline:hover { background: #f9fafb; }
-    .btn-solid { background: var(--brand); color: #fff; }
-    .btn-solid:hover { opacity: .92; }
-
-    /* Findings grid */
-    .grid3 { display: grid; gap: 1rem; }
-    @media (min-width: 860px) { .grid3 { grid-template-columns: repeat(3, 1fr); } }
-    .stat .label { color: var(--muted); font-size: .9rem; }
-    .stat .value { font-size: 1.9rem; font-weight: 700; letter-spacing: -.01em; margin-top: .1rem; }
-    .stat .note { color: var(--muted); font-size: .9rem; margin-top: .25rem; }
-
-    /* Controls row */
-    .controls { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
-    .input, .select { font: inherit; font-size: .95rem; padding: .55rem .7rem; border: 1px solid #d1d5db; border-radius: 12px; background: #fff; outline: none; }
-    .input:focus, .select:focus { box-shadow: 0 0 0 3px rgba(17,24,39,.15); }
-    .input { width: min(22rem, 100%); }
-
-    /* Cards grid */
-    .grid-cards { display: grid; gap: 1rem; }
-    @media (min-width: 640px) { .grid-cards { grid-template-columns: repeat(2, 1fr); } }
-    @media (min-width: 1024px) { .grid-cards { grid-template-columns: repeat(3, 1fr); } }
-    .project { border: 1px solid var(--border); border-radius: calc(var(--radius) + 4px); box-shadow: var(--shadow); background: #fff; }
-    .project .inner { padding: 1.1rem 1.2rem; }
-    .project h3 { margin: 0; font-size: 1.05rem; font-weight: 700; letter-spacing: -.01em; }
-    .muted { color: var(--muted); }
-    .tags { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: .6rem; }
-    .tag { font-size: .75rem; padding: .25rem .5rem; border-radius: 999px; background: var(--soft); color: #111827; }
-    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-top: .9rem; }
-
-    footer { border-top: 1px solid var(--border); color: var(--muted); font-size: .9rem; }
-    .foot { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 0; gap: .75rem; flex-wrap: wrap; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Re:Constructs - Research Explorer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #ff0000; --secondary: #0066ff; --tertiary: #ffff00;
+            --black: #000000; --white: #ffffff;
+            --gray-light: #f5f5f5; --gray-medium: #999999; --gray-dark: #333333;
+            --spacing-xs: 8px; --spacing-sm: 16px; --spacing-md: 24px;
+            --spacing-lg: 48px; --spacing-xl: 96px;
+        }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 300; line-height: 1.5; color: var(--black); background: var(--white); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 var(--spacing-md); }
+        h1 { font-size: clamp(2rem, 8vw, 6rem); font-weight: 700; line-height: 0.9; letter-spacing: -0.02em; }
+        h2 { font-size: clamp(1.5rem, 4vw, 3rem); font-weight: 600; line-height: 1.1; margin-bottom: var(--spacing-lg); }
+        h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: var(--spacing-sm); }
+        p { font-size: 1rem; line-height: 1.6; margin-bottom: var(--spacing-sm); }
+        .lead { font-size: 1.125rem; max-width: 60ch; margin: 0 auto var(--spacing-lg); }
+        .header { position: sticky; top: 0; background: var(--white); border-bottom: 1px solid var(--black); z-index: 100; }
+        .nav { display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-sm) 0; }
+        .logo { font-size: 1.25rem; font-weight: 700; text-decoration: none; color: var(--black); text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-links { display: flex; list-style: none; gap: var(--spacing-md); }
+        .nav-links a { text-decoration: none; color: var(--black); font-size: 0.875rem; text-transform: uppercase; transition: color 0.2s ease; }
+        .nav-links a:hover { color: var(--primary); }
+        .hero { padding: var(--spacing-xl) 0; text-align: center; border-bottom: 1px solid var(--black); }
+        .hero-title { margin-bottom: var(--spacing-md); }
+        .hero-subtitle { font-size: 1.125rem; color: var(--gray-dark); max-width: 50ch; margin: 0 auto var(--spacing-lg); }
+        .cta { display: inline-block; padding: var(--spacing-sm) var(--spacing-md); background: var(--primary); color: var(--white); text-decoration: none; font-weight: 600; text-transform: uppercase; font-size: 0.875rem; transition: all 0.2s ease; }
+        .cta:hover { background: var(--black); }
+        .cta-group { display: flex; gap: var(--spacing-sm); justify-content: center; flex-wrap: wrap; margin-top: var(--spacing-sm); }
+        .cta-outline { background: transparent; color: var(--black); border: 1px solid var(--black); }
+        .cta-outline:hover { background: var(--black); color: var(--white); }
+        .section { padding: var(--spacing-xl) 0; }
+        .section:nth-child(even) { background: var(--gray-light); }
+        .section-header { text-align: center; margin-bottom: var(--spacing-xl); }
+        .grid { display: grid; gap: var(--spacing-lg); }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+        .card { background: var(--white); border: 1px solid var(--black); padding: var(--spacing-md); transition: transform 0.2s ease; }
+        .card:hover { transform: translateY(-2px); }
+        .artwork-card { border: 1px solid var(--gray-medium); padding: var(--spacing-md); background: var(--white); }
+        .artwork-title { text-transform: uppercase; font-size: 1rem; margin-bottom: var(--spacing-xs); }
+        .artwork-creator { color: var(--gray-medium); font-size: 0.875rem; margin-bottom: var(--spacing-sm); text-transform: uppercase; }
+        .artwork-description { font-size: 0.875rem; margin-bottom: var(--spacing-md); }
+        .compare-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-xs); }
+        .compare-btn { padding: var(--spacing-sm); text-decoration: none; text-align: center; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid; transition: all 0.2s ease; }
+        .control-btn { border-color: var(--primary); color: var(--primary); background: var(--white); }
+        .control-btn:hover { background: var(--primary); color: var(--white); }
+        .systems-btn { border-color: var(--secondary); color: var(--secondary); background: var(--white); }
+        .systems-btn:hover { background: var(--secondary); color: var(--white); }
+        .footer { border-top: 1px solid var(--black); padding: var(--spacing-lg) 0; text-align: center; }
+        .footer-links { display: flex; justify-content: center; gap: var(--spacing-md); margin-bottom: var(--spacing-md); }
+        .footer-link { color: var(--black); text-decoration: none; font-size: 0.875rem; text-transform: uppercase; font-weight: 600; }
+        .footer-link:hover { color: var(--primary); }
+        .footer-credit { font-size: 0.75rem; color: var(--gray-medium); text-transform: uppercase; }
+        @media (max-width: 768px) { .nav-links { display: none; } .compare-buttons { grid-template-columns: 1fr; } }
+    </style>
 </head>
 <body>
-  <header class="site">
-    <div class="container site-row">
-      <div class="logo">ST</div>
-      <div>
-        <h1 class="title">Systems Thinking × Early Computer Art</h1>
-        <p class="subtitle">Improving historical algorithm recreation with language models</p>
-      </div>
-      <nav class="site">
-        <a href="index.html#overview" data-target="overview">Overview</a>
-        <a href="index.html#abstract" data-target="abstract">Abstract</a>
-        <a href="index.html#method" data-target="method">Method</a>
-        <a href="index.html#findings" data-target="findings">Findings</a>
-        <a href="index.html#projects" data-target="projects">Case studies</a>
-        <a href="index.html#refs" data-target="refs">References</a>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="#" class="logo">Re:Constructs</a>
+        <ul class="nav-links">
+          <li><a href="#research">Research</a></li>
+          <li><a href="#methodology">Method</a></li>
+          <li><a href="#artworks">Works</a></li>
+          <li><a href="#results">Results</a></li>
+        </ul>
       </nav>
     </div>
   </header>
 
-  <main>
-    <!-- Overview / hero -->
-    <section id="overview">
-      <div class="container pad">
-        <div class="grid-hero">
-          <div>
-            <h2 class="section">A practical study in preservation by recreation</h2>
-            <p class="lead">
-              The project tests whether a systems thinking frame can help language models recreate historical computer art with better experiential fidelity. Ten works from the Computer Arts Society’s PAGE magazine form the testbed. Two approaches are compared. A direct implementation from the original text. A two stage systems led version that restructures constants, variables, interaction, feedback, and emergence before coding.
-            </p>
-            <div style="display:flex; gap:.6rem; flex-wrap:wrap; margin-top:1rem;">
-              <a class="btn btn-outline" href="#projects">Explore case studies
-                <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 5L20 12L13 19" stroke="currentColor" stroke-width="2"/><path d="M20 12H4" stroke="currentColor" stroke-width="2"/></svg>
-              </a>
-              <a class="btn btn-solid" href="https://raw.githubusercontent.com/seansphd/REConstructs/8de70bbb1104856edb2a3e48833bf6300e10661d/ISEA%2025%20Submission.pdf" target="_blank" rel="noreferrer">Read the paper</a>
-            </div>
-          </div>
-          <div>
-            <div class="card">
-              <dl style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; font-size:.95rem;">
-                <div><dt class="muted">Corpus</dt><dd>PAGE 1969–1974</dd></div>
-                <div><dt class="muted">Comparators</dt><dd>Control vs Systems</dd></div>
-                <div><dt class="muted">Focus</dt><dd>Fidelity and learning value</dd></div>
-                <div><dt class="muted">Outputs</dt><dd>Web demos and diagrams</dd></div>
-              </dl>
-            </div>
-          </div>
-        </div>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="hero-title">Re:Constructs</h1>
+      <p class="hero-subtitle">Improving Historical Algorithm Recreation Through Systems Thinking</p>
+      <div class="cta-group">
+        <a href="#research" class="cta">Explore Research</a>
+        <a id="paperLink" class="cta cta-outline" target="_blank" rel="noopener">Full Paper (PDF)</a>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Abstract -->
-    <section id="abstract">
-      <div class="container pad">
-        <h2 class="section">Abstract</h2>
-        <p>
-          The study compares two pathways for recreating historic algorithms. A direct reading of artists’ descriptions, and a route that first distils systems features before any code is written. Systems led builds show higher alignment with conceptual and interactive aims, while direct builds show sharper mathematical accuracy. The work argues for balancing precision with the feel of the original practice when presenting archives to the public.
-        </p>
-        <div style="margin-top:1rem; display:flex; gap:.6rem; flex-wrap:wrap;">
-          <a class="btn btn-outline" href="https://raw.githubusercontent.com/seansphd/REConstructs/8de70bbb1104856edb2a3e48833bf6300e10661d/ISEA%2025%20Submission.pdf" target="_blank" rel="noreferrer">Open on GitHub</a>
-          <a class="btn btn-outline" href="ISEA%2025%20Submission.pdf" target="_blank" rel="noreferrer">Download local PDF</a>
-        </div>
+  <!-- Research Overview -->
+  <section id="research" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Research</h2>
+        <p class="lead">This study investigates whether systems thinking principles can improve the accuracy of large language models in recreating historical computer art algorithms from PAGE magazine, 1969 to 1974.</p>
       </div>
-    </section>
-
-    <!-- Method -->
-    <section id="method">
-      <div class="container pad">
-        <h2 class="section">Method</h2>
-        <ul style="padding-left:1.1rem; margin: .5rem 0;">
-          <li>Ten PAGE projects selected for depth of description and feasibility.</li>
-          <li>Two implementations per project using the same model and target stack.</li>
-          <li>Three forms of analysis. System diagrams. Code to text comparison. Researcher review of learning value.</li>
-        </ul>
+      <div class="grid grid-3">
+        <div class="card"><h3>Systems Thinking</h3><p>Decomposing algorithms into components, variables, interactions, and feedback loops to capture artistic intent.</p></div>
+        <div class="card"><h3>AI Recreation</h3><p>Using Claude 3.5 Sonnet to recreate historical computer artworks as interactive web applications.</p></div>
+        <div class="card"><h3>Preservation</h3><p>Balancing algorithmic accuracy with experiential authenticity in digital art preservation.</p></div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Findings -->
-    <section id="findings">
-      <div class="container pad">
-        <h2 class="section">Findings</h2>
-        <div class="grid3">
-          <div class="card stat"><div class="label">Conceptual and interaction</div><div class="value">9 / 10</div><div class="note">Systems led builds clearer on flows and interdependence</div></div>
-          <div class="card stat"><div class="label">Mathematical precision</div><div class="value">3 / 10</div><div class="note">Direct builds ahead on strict plotting and grid accuracy</div></div>
-          <div class="card stat"><div class="label">Learning value</div><div class="value">8 / 10</div><div class="note">Systems led builds explain pathways more clearly</div></div>
-        </div>
+  <!-- Methodology -->
+  <section id="methodology" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Methodology</h2>
+        <p class="lead">Two distinct approaches tested to recreate nine historical computer artworks</p>
       </div>
-    </section>
-
-    <!-- Projects -->
-    <section id="projects">
-      <div class="container pad">
-        <div style="display:flex; align-items:flex-end; gap:1rem; justify-content:space-between; flex-wrap:wrap;">
-          <div>
-            <h2 class="section" style="margin-bottom:.25rem;">Case studies</h2>
-            <p class="muted" style="margin:0; font-size:.95rem;">Search and filter, then open Control or Systems builds.</p>
-          </div>
-          <div class="controls">
-            <div>
-              <input id="search" class="input" placeholder="Search titles, authors, notes" />
-            </div>
-            <div>
-              <select id="tag" class="select"><option value="">All tags</option></select>
-            </div>
-          </div>
-        </div>
-
-        <div id="cards" class="grid-cards" style="margin-top:1rem;"></div>
-
-        <p class="muted" style="margin-top:1rem; font-size:.9rem;">Add more PAGE projects in the data section of this file.</p>
+      <div class="grid grid-3">
+        <div class="card"><h3>Control Group</h3><p>Direct input of original PAGE magazine descriptions to AI. Focus on technical precision.</p></div>
+        <div class="card"><h3>Systems Group</h3><p>Two stage process. Restructure with systems thinking, then recreate. Focus on conceptual relationships.</p></div>
+        <div class="card"><h3>Framework</h3><p>Components, inputs, feedback, and emergence are used as the organising schema.</p></div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- References -->
-    <section id="refs">
-      <div class="container pad">
-        <h2 class="section">References</h2>
-        <ul style="padding-left:1.1rem; margin:.5rem 0;">
-          <li>Arnold, R. D., & Wade, J. P. 2015. A Definition of Systems Thinking. Procedia Computer Science 44.</li>
-          <li>Reichardt, J. 1968. Cybernetic Serendipity. Studio International. 1971. Cybernetics, Art and Ideas.</li>
-          <li>Ascott, R. 1966–67. Behaviourist Art and the Cybernetic Vision. Cybernetica.</li>
-          <li>Computer Arts Society. PAGE magazine, 1969–1974.</li>
-        </ul>
+  <!-- Artworks -->
+  <section id="artworks" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Artworks</h2>
+        <p class="lead">Compare Control and Systems approaches for each reconstructed artwork. Reports and screenshots are provided as links.</p>
       </div>
-    </section>
-  </main>
+      <div class="grid grid-3" id="artworksGrid"></div>
+    </div>
+  </section>
 
-  <footer>
-    <div class="container foot">
-      <span>© <span id="year"></span> New Media Art Club</span>
-      <a href="index.html#overview" data-target="overview">Back to top</a>
+  <!-- Results -->
+  <section id="results" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Results</h2>
+      </div>
+      <div class="grid grid-3">
+        <div class="card"><h3>Interactivity</h3><p>7 of 9 showed improved interaction.</p></div>
+        <div class="card"><h3>Clarity</h3><p>7 of 9 achieved clearer visual outcomes.</p></div>
+        <div class="card"><h3>Precision</h3><p>4 of 9 reached stronger mathematical fidelity.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-links">
+        <a id="paperLinkFooter" class="footer-link" target="_blank" rel="noopener">Paper</a>
+      </div>
+      <p class="footer-credit">&copy; 2024 Sean Carroll</p>
     </div>
   </footer>
 
   <script>
-    // ===== Data =====
-    const PROJECTS = [
-      {
-        id: 'nash',
-        title: 'ART1',
-        authors: 'Katherine Nash; Richard H. Williams',
-        year: 1970,
-        source: 'PAGE 7',
-        tags: ['ASCII','Grid','Printer','FORTRAN'],
-        summary: 'Two 50×105 character arrays with overprint to vary tone. Local Control and Systems builds included.',
-        controlUrl: 'nash_ctl.html',
-        systemsUrl: 'nash_sys.html'
-      },
-      {
-        id: 'barbadillo',
-        title: 'Modules/Structures/Relationships',
-        authors: 'Manuel Barbadillo',
-        year: 1970,
-        source: 'PAGE 12',
-        tags: ['Modular','Combinatorics','Rotation','Reflection'],
-        summary: 'Square modules with rotation and reflection to generate combinatorial designs.',
-        controlUrl: 'barbadillo_ctl.html',
-        systemsUrl: 'barbadillo_sys.html'
-      },
-      {
-        id: 'drever',
-        title: 'Field Work 3: A Structured Arena',
-        authors: 'Timothy Drever',
-        year: 1972,
-        source: 'PAGE',
-        tags: ['Participation','Systems','Environment'],
-        summary: 'Wave interference patterns and spatial rhythm as participatory environment.',
-        controlUrl: 'drever_ctl.html',
-        systemsUrl: 'drever_sys.html'
-      },
-      {
-        id: 'emmet',
-        title: 'Transformation Program',
-        authors: 'Peter Emmett',
-        year: 1971,
-        source: 'PAGE',
-        tags: ['Transformations','Algorithmic'],
-        summary: 'Transformations applied to source shapes across iterations.',
-        controlUrl: 'emmet_ctl.html',
-        systemsUrl: 'emmet_sys.html'
-      },
-      {
-        id: 'mallary',
-        title: 'TRPL',
-        authors: 'Robert Mallary',
-        year: 1969,
-        source: 'PAGE',
-        tags: ['Plotter','Algorithmic','TRPL'],
-        summary: 'Plotter drawings produced with the TRPL language.',
-        controlUrl: 'mallary_ctl.html',
-        systemsUrl: 'mallary_sys.html'
-      },
-      {
-        id: 'meertens',
-        title: 'Letter-like Shapes',
-        authors: 'Lambert Meertens',
-        year: 1969,
-        source: 'PAGE',
-        tags: ['Typography','Morphology'],
-        summary: 'Procedures for generating glyph-like shapes.',
-        controlUrl: 'meertens_ctl.html',
-        systemsUrl: 'meertens_sys.html'
-      },
-      {
-        id: 'meyer',
-        title: 'Diary: October 1972',
-        authors: 'Meyer',
-        year: 1972,
-        source: 'PAGE',
-        tags: ['Diary','Time-based'],
-        summary: 'Structured daily outputs documented through October 1972.',
-        controlUrl: 'meyer_ctl.html',
-        systemsUrl: 'meyer_sys.html'
-      },
-      {
-        id: 'struycken',
-        title: 'Computer Structures',
-        authors: 'Peter Struycken',
-        year: 1970,
-        source: 'PAGE',
-        tags: ['Structures','Systems'],
-        summary: 'Large-scale structure studies with computational rules.',
-        controlUrl: 'struckyen_ctl.html',
-        systemsUrl: 'struckyen_sys.html'
-      }
+    // Use GitHub Pages to render HTML instead of raw content
+    const PAGES_BASE = "https://seansphd.github.io/REConstructs/";
+    const JSON_URL = "https://raw.githubusercontent.com/seansphd/REConstructs/main/Contents.json";
+
+    // Metadata preserved
+    const artworkMeta = [
+      { key: "nash", title: "ART1", creator: "Katherine Nash, Richard H. Williams", description: "A computer art program helping artists with limited computer knowledge create designs using a grid based ASCII art system." },
+      { key: "barbadillo", title: "Modules/Structures/Relationships", creator: "Manuel Barbadillo", description: "A modular art system using geometric forms arranged in a grid with rotation, reflection, and colour inversion capabilities." },
+      { key: "drever", title: "Field Work 3", creator: "Timothy Drever", description: "A conceptual artwork exploring wave interference and user perception." },
+      { key: "emmet", title: "Transformation Program", creator: "Colin Emmett", description: "A plotter graphics program transforming line drawings through vector interpolation using MAPPER, GANGER, and SHADOW methods." },
+      { key: "meertens", title: "Letter-like Shapes", creator: "Lambert Meertens", description: "A system generating stroke like shapes on a point grid using backtracking while avoiding specific patterns." },
+      { key: "struckyen", title: "Patterns", creator: "Peter Struycken", description: "A system creating patterns from sixteen black and white modules in grids using controlled randomness." },
+      { key: "shirley", title: "Dune Tune", creator: "Robin Shirley, Gus Garside", description: "A computer generated poem using BARD 1D with random word selection and decay based repetition control." },
+      { key: "meyer", title: "Meyer's Diary", creator: "Vicky Meyer", description: "A dynamic program for modular sculpture generating 3D rectangular modules with independent movement." },
+      { key: "mallary", title: "TRPL", creator: "Robert Mallary", description: "A plotter graphics program interpolating between master lines to produce Moiré patterns using incremental constraints." }
     ];
 
-    // ===== State =====
-    const state = { query: '', tag: '' };
+    // Convert any JSON value to a GitHub Pages URL
+    function toPagesUrl(urlOrName) {
+      if (!urlOrName) return null;
 
-    // ===== Helpers =====
-    function el(html) { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; }
+      // Fix simple trailing typo
+      if (urlOrName.endsWith(".html.")) urlOrName = urlOrName.slice(0, -1);
 
-    function renderTags() {
-      const sel = document.getElementById('tag');
-      const set = new Set();
-      PROJECTS.forEach(p => p.tags.forEach(t => set.add(t)));
-      Array.from(set).sort().forEach(t => sel.appendChild(el(`<option>${t}</option>`)));
+      // If it is already a full raw URL, strip to path after /main/
+      if (urlOrName.startsWith("https://raw.githubusercontent.com/")) {
+        const idx = urlOrName.indexOf("/main/");
+        if (idx !== -1) {
+          const rel = urlOrName.slice(idx + "/main/".length);
+          return PAGES_BASE + rel;
+        }
+      }
+
+      // If it is a repo path like "system/html/nash_sys.html"
+      if (!urlOrName.startsWith("http")) {
+        return PAGES_BASE + urlOrName.replace(/^\/+/, "");
+      }
+
+      // Blob or other forms can be normalised similarly
+      const blobIdx = urlOrName.indexOf("/blob/main/");
+      if (blobIdx !== -1) {
+        const rel = urlOrName.slice(blobIdx + "/blob/main/".length);
+        return PAGES_BASE + rel;
+      }
+
+      // Last resort, return as is
+      return urlOrName;
     }
 
-    function matches(p) {
-      const q = state.query.toLowerCase();
-      const bag = `${p.title} ${p.authors} ${p.summary} ${p.source}`.toLowerCase();
-      const okQ = !q || bag.includes(q);
-      const okT = !state.tag || p.tags.includes(state.tag);
-      return okQ && okT;
+    // Case-insensitive helper
+    const lc = s => (s || "").toLowerCase();
+
+    // Find first matching entry from an object of {name: url}
+    function findFirst(obj, stems, requiredTokens = []) {
+      if (!obj) return null;
+      const entries = Object.entries(obj);
+      for (const [name, url] of entries) {
+        const n = lc(name);
+        if (stems.some(stem => n.includes(stem)) && requiredTokens.every(tok => n.includes(tok))) {
+          return toPagesUrl(url);
+        }
+      }
+      return null;
     }
 
-    function renderCards() {
-      const wrap = document.getElementById('cards');
-      wrap.innerHTML = '';
-      PROJECTS.filter(matches).forEach(p => {
-        wrap.appendChild(el(`
-          <article class="project">
-            <div class="inner">
-              <div style="display:flex; justify-content:space-between; align-items:center; gap:.6rem;">
-                <h3>${p.title}</h3>
-                <span class="muted" style="font-size:.78rem;">${p.year}</span>
-              </div>
-              <p class="muted" style="margin:.2rem 0 0 0; font-size:.9rem;">${p.authors}</p>
-              <p style="margin:.6rem 0 0 0; font-size:.95rem;">${p.summary}</p>
-              <div class="tags">
-                ${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}
-              </div>
-              <div class="actions">
-                <a class="btn btn-outline" href="${p.controlUrl}" target="_blank" rel="noreferrer">Control
-                  <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4H20V10" stroke="currentColor" stroke-width="2"/><path d="M10 14L20 4" stroke="currentColor" stroke-width="2"/><path d="M20 14V20H4V4H10" stroke="currentColor" stroke-width="2"/></svg>
-                </a>
-                <a class="btn btn-solid" href="${p.systemsUrl}" target="_blank" rel="noreferrer">Systems
-                  <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4H20V10" stroke="currentColor" stroke-width="2"/><path d="M10 14L20 4" stroke="currentColor" stroke-width="2"/><path d="M20 14V20H4V4H10" stroke="currentColor" stroke-width="2"/></svg>
-                </a>
+    async function loadFromJSON() {
+      const grid = document.getElementById('artworksGrid');
+      grid.innerHTML = "<p>Loading artworks...</p>";
+
+      try {
+        const res = await fetch(JSON_URL, { cache: "no-cache" });
+        const data = await res.json();
+
+        // Set paper link if present
+        const paperVariants = [
+          "Re:ConstructsPaperISEA2025.pdf",
+          "Re%20ConstructsPaperISEA2025.pdf",
+          "Re%3AConstructsPaperISEA2025.pdf"
+        ];
+        for (const k of paperVariants) {
+          if (data[k]) {
+            const paperHref = toPagesUrl(data[k]);
+            const paperLink = document.getElementById("paperLink");
+            const paperLinkFooter = document.getElementById("paperLinkFooter");
+            if (paperLink) paperLink.href = paperHref;
+            if (paperLinkFooter) paperLinkFooter.href = paperHref;
+            break;
+          }
+        }
+
+        // Buckets in your JSON
+        const baselineHtml = data?.baseline?.html || {};
+        const baselineShots = data?.baseline?.screengrab || {};
+        const systemHtml = data?.system?.html || {};
+        const systemShots = data?.system?.screengrab || {};
+        const reports = data?.system?.reports || {};
+
+        // Tolerant stems
+        const variants = {
+          nash: ["nash"],
+          barbadillo: ["barbadillo"],
+          drever: ["drever"],
+          emmet: ["emmet", "emmett"],
+          meertens: ["meertens"],
+          struckyen: ["struckyen", "stuckyen", "struycken"],
+          shirley: ["shirley"],
+          meyer: ["meyer"],
+          mallary: ["mallary"]
+        };
+
+        const cards = artworkMeta.map(meta => {
+          const stems = variants[meta.key] || [meta.key];
+
+          const controlUrl =
+            findFirst(baselineHtml, stems, ["base"]) ||
+            findFirst(systemHtml, stems, ["ctl"]); // fallback if baseline missing
+
+          const systemUrl = findFirst(systemHtml, stems, ["sys"]);
+          const reportUrl = findFirst(reports, stems, []); // filenames already include report
+          const basePng = findFirst(baselineShots, stems, []);
+          const sysPng = findFirst(systemShots, stems, []);
+
+          const links = [];
+          if (controlUrl) links.push(`<a href="${controlUrl}" class="compare-btn control-btn" target="_blank" rel="noopener">Control HTML</a>`);
+          if (systemUrl) links.push(`<a href="${systemUrl}" class="compare-btn systems-btn" target="_blank" rel="noopener">Systems HTML</a>`);
+          if (reportUrl) links.push(`<a href="${reportUrl}" class="compare-btn" target="_blank" rel="noopener">Report</a>`);
+          if (basePng) links.push(`<a href="${basePng}" class="compare-btn" target="_blank" rel="noopener">Baseline Screenshot</a>`);
+          if (sysPng) links.push(`<a href="${sysPng}" class="compare-btn" target="_blank" rel="noopener">System Screenshot</a>`);
+
+          return `
+            <div class="artwork-card">
+              <h3 class="artwork-title">${meta.title}</h3>
+              <div class="artwork-creator">${meta.creator}</div>
+              <p class="artwork-description">${meta.description}</p>
+              <div class="compare-buttons">
+                ${links.join("") || '<span style="font-size:0.85rem;color:#666;">No files found in JSON for this item</span>'}
               </div>
             </div>
-          </article>
-        `));
-      });
-    }
+          `;
+        });
 
-    // ===== Wire up =====
-    document.getElementById('year').textContent = String(new Date().getFullYear());
-    renderTags();
-    renderCards();
-
-    document.getElementById('search').addEventListener('input', e => { state.query = e.target.value || ''; renderCards(); });
-    document.getElementById('tag').addEventListener('change', e => { state.tag = e.target.value || ''; renderCards(); });
-  </script>
-  <script>
-    // Anchor navigation that works on any host and any page
-    function goTo(id) {
-      const onIndex = /(^|\/)index\.html?$/.test(location.pathname) || location.pathname === '/' || location.pathname === '';
-      if (onIndex) {
-        const el = document.getElementById(id);
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } else {
-        location.href = 'index.html#' + id;
+        grid.innerHTML = cards.join("");
+        initAnimations();
+      } catch (err) {
+        console.error(err);
+        grid.innerHTML = "<p>Could not load repository contents.</p>";
       }
     }
 
-    document.querySelectorAll('nav.site a[data-target], footer a[data-target]').forEach(a => {
-      a.addEventListener('click', (ev) => {
-        ev.preventDefault();
-        goTo(a.getAttribute('data-target'));
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        if (a.getAttribute('href') === '#') return;
+        e.preventDefault();
+        const t = document.querySelector(a.getAttribute('href'));
+        if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
 
-    // Handle direct visits with a hash
-    if (location.hash) {
-      const id = location.hash.replace('#','');
-      const el = document.getElementById(id);
-      if (el) el.scrollIntoView({ behavior: 'instant', block: 'start' });
+    // Animations
+    function initAnimations() {
+      const cards = document.querySelectorAll('.card, .artwork-card');
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            gsap.fromTo(entry.target, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" });
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+      cards.forEach(c => obs.observe(c));
     }
+
+    document.addEventListener('DOMContentLoaded', loadFromJSON);
   </script>
 </body>
 </html>
+
