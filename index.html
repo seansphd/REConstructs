@@ -261,18 +261,18 @@ p  { font-size: 1rem; line-height: 1.6; margin-bottom: var(--spacing-sm); }
 
     <figure class="method-figure">
       <img
-        src="Baseline%26SystemMethods.png"
+        src="BaselineSystemMethods.png"
         alt="Diagram of the Baseline and Systems methods used in the study"
         class="method-image"
       >
       <figcaption class="method-caption">
         Overview of the Baseline and Systems methods.
-        <a href="Baseline%26SystemMethods.png" target="_blank" rel="noopener">Open full size</a>
+        <a href="BaselineSystemMethods.png" target="_blank" rel="noopener">Open full size</a>
       </figcaption>
     </figure>
 
     <div class="grid grid-3">
-      <div class="card"><h3>Control Group</h3><p>Direct input of original PAGE magazine descriptions to AI. Focus on technical precision.</p></div>
+      <div class="card"><h3> Group</h3><p>Direct input of original PAGE magazine descriptions to AI. Focus on technical precision.</p></div>
       <div class="card"><h3>Systems Group</h3><p>Two stage process. Restructure with systems thinking, then recreate. Focus on conceptual relationships.</p></div>
       <div class="card"><h3>Framework</h3><p>Components, inputs, feedback, and emergence are used as the organising schema.</p></div>
     </div>
@@ -291,19 +291,158 @@ p  { font-size: 1rem; line-height: 1.6; margin-bottom: var(--spacing-sm); }
     </div>
   </section>
 
-  <!-- Results -->
-  <section id="results" class="section">
-    <div class="container">
-      <div class="section-header">
-        <h2>Results</h2>
-      </div>
-      <div class="grid grid-3">
-        <div class="card"><h3>Interactivity</h3><p>7 of 9 showed improved interaction.</p></div>
-        <div class="card"><h3>Clarity</h3><p>7 of 9 achieved clearer visual outcomes.</p></div>
-        <div class="card"><h3>Precision</h3><p>4 of 9 reached stronger mathematical fidelity.</p></div>
-      </div>
+<!-- Results -->
+<section id="results" class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Results</h2>
+     <p class="lead">
+  Each artwork was rebuilt twice on the same model (Claude 3.5 Sonnet) under fixed settings: a Baseline version and a Systems-Situated version. A researcher scored three criteria for each build — algorithmic logic, visual clarity, and user interactivity — on a 1 to 5 scale, giving a total out of 15. The AI then completed the same rubric as a self evaluation. The totals shown on this page are the final-row figures from the Chapter 6 tables, with AI totals for <em>Modules/Structures/Relationships</em> and <em>Designing Letter-like Shapes</em> added from your corrections. Patterns are clear: Systems-Situated often lifts interactivity and clarity; Baseline more often edges algorithmic logic where strict mathematical structure leads the design. Read these figures as situated evidence that supports curatorial judgement rather than as a test of authenticity.
+</p>
+
     </div>
-  </section>
+
+    <div class="results-table-wrap">
+      <table class="results-table" id="resultsTable">
+        <thead>
+          <tr>
+            <th>Project</th>
+            <th>Researcher<br>Baseline</th>
+            <th>Researcher<br>Systems</th>
+            <th>AI<br>Baseline</th>
+            <th>AI<br>Systems</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot>
+          <tr>
+            <td><strong>Totals</strong></td>
+            <td id="totResBase"></td>
+            <td id="totResSys"></td>
+            <td id="totAiBase"></td>
+            <td id="totAiSys"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</section>
+
+<style>
+  .results-table-wrap { overflow-x: auto; }
+  .results-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+    border: 1px solid var(--black);
+  }
+  .results-table th, .results-table td {
+    border: 1px solid var(--black);
+    padding: var(--spacing-xs);
+    font-size: 0.95rem;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .results-table thead th {
+    background: var(--gray-light);
+    font-weight: 700;
+  }
+  .results-table tfoot td {
+    background: var(--gray-light);
+    font-weight: 700;
+  }
+  .results-table td:first-child, .results-table th:first-child {
+    text-align: left;
+    padding-left: var(--spacing-sm);
+  }
+</style>
+
+<script>
+  // Totals pulled from the PDF (out of 15). Use null where a table total is not present.
+const projectTotals = [
+  { key: "art1", title: "ART1",
+    researcher: { baseline: 8,   systems: 6   },
+    ai:         { baseline: 7.5, systems: 9   } },
+
+  { key: "modules", title: "Modules / Structures / Relationships",
+    researcher: { baseline: 7.5, systems: 9   },
+    ai:         { baseline: 8.5, systems: 11  } },
+
+  { key: "fieldwork3", title: "Field Work 3",
+    researcher: { baseline: 10,  systems: 3   },
+    ai:         { baseline: 11.5, systems: 13 } },
+
+  { key: "transformation", title: "The Transformation Program",
+    researcher: { baseline: 6,   systems: 9   },
+    ai:         { baseline: 6.5, systems: 11  } },
+
+  { key: "letterlike", title: "Designing Letter-like Shapes",
+    researcher: { baseline: 7.5, systems: 4   },
+    ai:         { baseline: 6.5, systems: 10  } },
+
+  { key: "patterns", title: "Patterns",
+    researcher: { baseline: 10,  systems: 10  },
+    ai:         { baseline: 6,   systems: 8   } },
+
+  { key: "dunetune", title: "Dune Tune",
+    researcher: { baseline: 10,  systems: 9   },
+    ai:         { baseline: 11.5, systems: 9  } },
+
+  { key: "diary", title: "Meyer’s Diary",
+    researcher: { baseline: 7.5, systems: 7   },
+    ai:         { baseline: 9,   systems: 12  } },
+
+  { key: "trpl", title: "TRPL",
+    researcher: { baseline: 7.5, systems: 3.5 },
+    ai:         { baseline: 7.5, systems: 11  } },
+];
+
+
+  function renderResultsTable() {
+    const tbody = document.querySelector('#resultsTable tbody');
+    tbody.innerHTML = '';
+
+    let totResBase = 0, totResSys = 0, totAiBase = 0, totAiSys = 0;
+    let countAiBase = 0, countAiSys = 0;
+
+    projectTotals.forEach(p => {
+      const tr = document.createElement('tr');
+
+      const aiBase = p.ai?.baseline;
+      const aiSys  = p.ai?.systems;
+
+      tr.innerHTML = `
+        <td>${p.title}</td>
+        <td>${p.researcher.baseline}</td>
+        <td>${p.researcher.systems}</td>
+        <td>${aiBase ?? '—'}</td>
+        <td>${aiSys ?? '—'}</td>
+      `;
+
+      tbody.appendChild(tr);
+
+      // Sum researcher
+      totResBase += Number(p.researcher.baseline) || 0;
+      totResSys  += Number(p.researcher.systems)  || 0;
+
+      // Sum AI where available
+      if (typeof aiBase === 'number') { totAiBase += aiBase; countAiBase++; }
+      if (typeof aiSys  === 'number') { totAiSys  += aiSys;  countAiSys++;  }
+    });
+
+    // Inject totals
+    document.getElementById('totResBase').textContent = totResBase.toFixed(1).replace(/\.0$/, '');
+    document.getElementById('totResSys').textContent  = totResSys.toFixed(1).replace(/\.0$/, '');
+
+    // Show AI totals; if some are missing, still sum the ones present
+    document.getElementById('totAiBase').textContent  = countAiBase ? totAiBase.toFixed(1).replace(/\.0$/, '') : '—';
+    document.getElementById('totAiSys').textContent   = countAiSys  ? totAiSys.toFixed(1).replace(/\.0$/, '')  : '—';
+  }
+
+  // Run after DOM ready
+  document.addEventListener('DOMContentLoaded', renderResultsTable);
+</script>
+
 
   <!-- Footer -->
   <footer class="footer">
@@ -466,4 +605,5 @@ p  { font-size: 1rem; line-height: 1.6; margin-bottom: var(--spacing-sm); }
 
 </body>
 </html>
+
 
