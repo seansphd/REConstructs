@@ -1,1 +1,4 @@
+Baseline Group: Prompt 1 -> text excerpt-> Claude Sonnet 3.5 = Web app 
 
+Prompt 1
+ “Read this text and think through what is happening step by step. Use what you have understood to create an example of the underlying algorithm described at work using HTML and vanilla javascript. Explain in the code how you have tried to replicate the system faithfully and when you have had to adapt.”
