@@ -1,0 +1,66 @@
+{
+  "Re:ConstructsPaperISEA2025.pdf": "https://github.com/seansphd/REConstructs/blob/main/Re%3AConstructsPaperISEA2025.pdf",
+  "index.html": "https://github.com/seansphd/REConstructs/blob/main/index.html",
+  "baseline": {
+    "html": {
+      "barbadillo_base.html": "https://github.com/seansphd/REConstructs/blob/main/baseline/html/barbadillo_base.html",
+      "drever_base.html.": "https://github.com/seansphd/REConstructs/blob/main/baseline/html/drever_base.html.",
+      "emmet_base.html": "https://github.com/seansphd/REConstructs/blob/main/baseline/html/emmet_base.html",
+      "mallary_base.html": "https://github.com/seansphd/REConstructs/blob/main/baseline/html/mallary_base.html",
+      "meertens_base.html": "https://github.com/seansphd/REConstructs/blob/main/baseline/html/meertens_base.html",
+      "meyer_base.html": "https://github.com/seansphd/REConstructs/blob/main/baseline/html/meyer_base.html",
+      "shirley_base.html": "https://github.com/seansphd/REConstructs/blob/main/baseline/html/shirley_base.html",
+      "struckyen_base.html": "https://github.com/seansphd/REConstructs/blob/main/baseline/html/struckyen_base.html"
+    },
+    "prompting.txt": "https://github.com/seansphd/REConstructs/blob/main/baseline/prompting.txt",
+    "screengrab": {
+      "Mallary_base.png": "https://github.com/seansphd/REConstructs/blob/main/baseline/screengrab/Mallary_base.png",
+      "barbadillo_base.png": "https://github.com/seansphd/REConstructs/blob/main/baseline/screengrab/barbadillo_base.png",
+      "drever_base.png": "https://github.com/seansphd/REConstructs/blob/main/baseline/screengrab/drever_base.png",
+      "emmet_base.png": "https://github.com/seansphd/REConstructs/blob/main/baseline/screengrab/emmet_base.png",
+      "meertens_base.png": "https://github.com/seansphd/REConstructs/blob/main/baseline/screengrab/meertens_base.png",
+      "meyer_base.png": "https://github.com/seansphd/REConstructs/blob/main/baseline/screengrab/meyer_base.png",
+      "nash_base.png": "https://github.com/seansphd/REConstructs/blob/main/baseline/screengrab/nash_base.png",
+      "shirley_base.png": "https://github.com/seansphd/REConstructs/blob/main/baseline/screengrab/shirley_base.png",
+      "struckyen_base.png": "https://github.com/seansphd/REConstructs/blob/main/baseline/screengrab/struckyen_base.png"
+    }
+  },
+  "system": {
+    "html": {
+      "barbadillo_sys.html": "https://github.com/seansphd/REConstructs/blob/main/system/html/barbadillo_sys.html",
+      "drever_sys.html": "https://github.com/seansphd/REConstructs/blob/main/system/html/drever_sys.html",
+      "emmet_sys.html": "https://github.com/seansphd/REConstructs/blob/main/system/html/emmet_sys.html",
+      "mallary_sys.html": "https://github.com/seansphd/REConstructs/blob/main/system/html/mallary_sys.html",
+      "meertens_sys.html": "https://github.com/seansphd/REConstructs/blob/main/system/html/meertens_sys.html",
+      "meyer_sys.html": "https://github.com/seansphd/REConstructs/blob/main/system/html/meyer_sys.html",
+      "nash_ctl.html": "https://github.com/seansphd/REConstructs/blob/main/system/html/nash_ctl.html",
+      "nash_sys.html": "https://github.com/seansphd/REConstructs/blob/main/system/html/nash_sys.html",
+      "shirley_sys.html": "https://github.com/seansphd/REConstructs/blob/main/system/html/shirley_sys.html",
+      "struckyen_sys.html": "https://github.com/seansphd/REConstructs/blob/main/system/html/struckyen_sys.html"
+    },
+    "prompting.txt": "https://github.com/seansphd/REConstructs/blob/main/system/prompting.txt",
+    "reports": {
+      "barbadillo_report.txt": "https://github.com/seansphd/REConstructs/blob/main/system/reports/barbadillo_report.txt",
+      "drever_report.txt": "https://github.com/seansphd/REConstructs/blob/main/system/reports/drever_report.txt",
+      "emmett_report.txt": "https://github.com/seansphd/REConstructs/blob/main/system/reports/emmett_report.txt",
+      "mallary_report": "https://github.com/seansphd/REConstructs/blob/main/system/reports/mallary_report",
+      "meertens_report.txt": "https://github.com/seansphd/REConstructs/blob/main/system/reports/meertens_report.txt",
+      "meyer_report.txt": "https://github.com/seansphd/REConstructs/blob/main/system/reports/meyer_report.txt",
+      "nash_report.txt": "https://github.com/seansphd/REConstructs/blob/main/system/reports/nash_report.txt",
+      "shirley_report.txt": "https://github.com/seansphd/REConstructs/blob/main/system/reports/shirley_report.txt",
+      "struckyen_report.txt": "https://github.com/seansphd/REConstructs/blob/main/system/reports/struckyen_report.txt"
+    },
+    "screengrab": {
+      "barbadillo_sys.png": "https://github.com/seansphd/REConstructs/blob/main/system/screengrab/barbadillo_sys.png",
+      "drever_sys.png": "https://github.com/seansphd/REConstructs/blob/main/system/screengrab/drever_sys.png",
+      "emmett_sys.png": "https://github.com/seansphd/REConstructs/blob/main/system/screengrab/emmett_sys.png",
+      "mallary_sys.png": "https://github.com/seansphd/REConstructs/blob/main/system/screengrab/mallary_sys.png",
+      "meertens_sys.png": "https://github.com/seansphd/REConstructs/blob/main/system/screengrab/meertens_sys.png",
+      "meyer_sys.png": "https://github.com/seansphd/REConstructs/blob/main/system/screengrab/meyer_sys.png",
+      "nash_sys.png": "https://github.com/seansphd/REConstructs/blob/main/system/screengrab/nash_sys.png",
+      "shirley_sys.png": "https://github.com/seansphd/REConstructs/blob/main/system/screengrab/shirley_sys.png",
+      "stuckyen_sys.png": "https://github.com/seansphd/REConstructs/blob/main/system/screengrab/stuckyen_sys.png"
+    }
+  }
+}
+```
