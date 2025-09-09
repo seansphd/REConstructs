@@ -1,0 +1,20 @@
+Tripl systems report 
+
+Here's a breakdown of the TRPL description using systems thinking concepts: constraints, variables, interactions, emergence, and feedback.
+1. Constraints:
+   - The incremental plotter limitations (e.g., low-resolution, stepwise movement, fixed grid) are key constraints. These shape the possible outcomes, particularly influencing the Moiré patterns produced.
+   - Resolution limits (100 vs. 200 steps per inch) and the plotter's mechanical properties, such as only moving in increments or set directions, restrict the precision and smoothness of curves, resulting in distinct, patterned lines. This constraint is creatively used to form the final aesthetic output, demonstrating the balance between limit and opportunity in art.
+2. Variables:
+   - Program parameters like height (YMOD), width (WIDE), interpolation count (XMOD), and the X/Y scaling factors are adjustable variables that define the structure and spacing within the artwork.
+   - Spacing schemes defined by distances between reference lines and masters, along with specific mathematical routines like XFIT and DGRAF, create varying levels of interpolation. These variables shape the intricacies of each line sequence and ultimately control the visual characteristics of the Moiré patterns.
+3. Interactions:
+   - The interaction of opposing master lines with gradually varying spacing schemes and the grid’s absolute regularity produces dynamic and complex Moiré patterns.
+   - Program routines and subroutines, such as XFIT and DGRAF, interact to determine line placements and spacing. For instance, DGRAF interacts with XFIT to calculate spacing values based on reference points.
+   - The cooperation between different software components, as well as the collaboration between Robert Mallary and Dr. Roger Ehrich in designing the routines, highlights interactions that enhance TRPL’s functionality and aesthetic capability.
+4. Emergence:
+   - The Moiré patterns are an emergent property of the system, arising from the combined influence of plotter constraints, interpolation routines, and spacing schemes. Although each component has a defined function, the resulting patterns are complex and unexpected, embodying qualities beyond simple line interpolations.
+   - The dialectical unity of constraint and freedom in TRPL, alongside artistic decisions to exploit plotter limitations, leads to unique visual effects, representing emergence through the synthesis of mechanical limits and artistic intention.
+5. Feedback:
+   - The program requires feedback loops through parameter adjustments (like XMOD and YMOD values) to refine the visual outcome. If a drawing lacks the desired clarity or pattern strength, modifications to variables or algorithms (such as trying alternative plotter resolutions or re-calibrating interpolation distances) can be made.
+   - Additionally, Mallary’s exploration of resolution simulation (attempting to replicate the Amherst plotter’s lower resolution on the higher-resolution UMASS plotter) represents a feedback-informed approach to control output appearance by understanding and iterating on plotter capabilities.
+This systems-thinking perspective reveals how TRPL isn’t merely a plotting tool; it’s a dynamic system where interactions between constraints, variables, feedback loops, and the emergent properties of line patterns culminate in a process that blurs the boundaries between mechanical function and artistic expression.
