@@ -6,60 +6,182 @@
     <title>Re:Constructs - Research Explorer</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --primary: #ff0000; --secondary: #0066ff; --tertiary: #ffff00;
-            --black: #000000; --white: #ffffff;
-            --gray-light: #f5f5f5; --gray-medium: #999999; --gray-dark: #333333;
-            --spacing-xs: 8px; --spacing-sm: 16px; --spacing-md: 24px;
-            --spacing-lg: 48px; --spacing-xl: 96px;
-        }
-        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 300; line-height: 1.5; color: var(--black); background: var(--white); }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 var(--spacing-md); }
-        h1 { font-size: clamp(2rem, 8vw, 6rem); font-weight: 700; line-height: 0.9; letter-spacing: -0.02em; }
-        h2 { font-size: clamp(1.5rem, 4vw, 3rem); font-weight: 600; line-height: 1.1; margin-bottom: var(--spacing-lg); }
-        h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: var(--spacing-sm); }
-        p { font-size: 1rem; line-height: 1.6; margin-bottom: var(--spacing-sm); }
-        .lead { font-size: 1.125rem; max-width: 60ch; margin: 0 auto var(--spacing-lg); }
-        .header { position: sticky; top: 0; background: var(--white); border-bottom: 1px solid var(--black); z-index: 100; }
-        .nav { display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-sm) 0; }
-        .logo { font-size: 1.25rem; font-weight: 700; text-decoration: none; color: var(--black); text-transform: uppercase; letter-spacing: 0.05em; }
-        .nav-links { display: flex; list-style: none; gap: var(--spacing-md); }
-        .nav-links a { text-decoration: none; color: var(--black); font-size: 0.875rem; text-transform: uppercase; transition: color 0.2s ease; }
-        .nav-links a:hover { color: var(--primary); }
-        .hero { padding: var(--spacing-xl) 0; text-align: center; border-bottom: 1px solid var(--black); }
-        .hero-title { margin-bottom: var(--spacing-md); }
-        .hero-subtitle { font-size: 1.125rem; color: var(--gray-dark); max-width: 50ch; margin: 0 auto var(--spacing-lg); }
-        .cta { display: inline-block; padding: var(--spacing-sm) var(--spacing-md); background: var(--primary); color: var(--white); text-decoration: none; font-weight: 600; text-transform: uppercase; font-size: 0.875rem; transition: all 0.2s ease; }
-        .cta:hover { background: var(--black); }
-        .cta-group { display: flex; gap: var(--spacing-sm); justify-content: center; flex-wrap: wrap; margin-top: var(--spacing-sm); }
-        .cta-outline { background: transparent; color: var(--black); border: 1px solid var(--black); }
-        .cta-outline:hover { background: var(--black); color: var(--white); }
-        .section { padding: var(--spacing-xl) 0; }
-        .section:nth-child(even) { background: var(--gray-light); }
-        .section-header { text-align: center; margin-bottom: var(--spacing-xl); }
-        .grid { display: grid; gap: var(--spacing-lg); }
-        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
-        .card { background: var(--white); border: 1px solid var(--black); padding: var(--spacing-md); transition: transform 0.2s ease; }
-        .card:hover { transform: translateY(-2px); }
-        .artwork-card { border: 1px solid var(--gray-medium); padding: var(--spacing-md); background: var(--white); }
-        .artwork-title { text-transform: uppercase; font-size: 1rem; margin-bottom: var(--spacing-xs); }
-        .artwork-creator { color: var(--gray-medium); font-size: 0.875rem; margin-bottom: var(--spacing-sm); text-transform: uppercase; }
-        .artwork-description { font-size: 0.875rem; margin-bottom: var(--spacing-md); }
-        .compare-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-xs); }
-        .compare-btn { padding: var(--spacing-sm); text-decoration: none; text-align: center; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid; transition: all 0.2s ease; }
-        .control-btn { border-color: var(--primary); color: var(--primary); background: var(--white); }
-        .control-btn:hover { background: var(--primary); color: var(--white); }
-        .systems-btn { border-color: var(--secondary); color: var(--secondary); background: var(--white); }
-        .systems-btn:hover { background: var(--secondary); color: var(--white); }
-        .footer { border-top: 1px solid var(--black); padding: var(--spacing-lg) 0; text-align: center; }
-        .footer-links { display: flex; justify-content: center; gap: var(--spacing-md); margin-bottom: var(--spacing-md); }
-        .footer-link { color: var(--black); text-decoration: none; font-size: 0.875rem; text-transform: uppercase; font-weight: 600; }
-        .footer-link:hover { color: var(--primary); }
-        .footer-credit { font-size: 0.75rem; color: var(--gray-medium); text-transform: uppercase; }
-        @media (max-width: 768px) { .nav-links { display: none; } .compare-buttons { grid-template-columns: 1fr; } }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+/* Reset */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* Theme */
+:root {
+  --primary: #ff0000;
+  --secondary: #0066ff;
+  --tertiary: #ffff00;
+  --black: #000000;
+  --white: #ffffff;
+  --gray-light: #f5f5f5;
+  --gray-medium: #999999;
+  --gray-dark: #333333;
+
+  --spacing-xs: 8px;
+  --spacing-sm: 16px;
+  --spacing-md: 24px;
+  --spacing-lg: 48px;
+  --spacing-xl: 96px;
+}
+
+/* Base */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--black);
+  background: var(--white);
+}
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 var(--spacing-md); }
+
+/* Typography */
+h1 { font-size: clamp(2rem, 8vw, 6rem); font-weight: 700; line-height: 0.9; letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.5rem, 4vw, 3rem); font-weight: 600; line-height: 1.1; letter-spacing: -0.01em; margin-bottom: var(--spacing-lg); }
+h3 { font-size: 1.25rem; font-weight: 600; line-height: 1.2; margin-bottom: var(--spacing-sm); }
+p  { font-size: 1rem; line-height: 1.6; margin-bottom: var(--spacing-sm); }
+.lead { font-size: 1.125rem; font-weight: 400; max-width: 60ch; margin: 0 auto var(--spacing-lg); }
+
+/* Header and Nav */
+.header { position: sticky; top: 0; background: var(--white); border-bottom: 1px solid var(--black); z-index: 100; }
+.nav { display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-sm) 0; }
+.logo { font-size: 1.25rem; font-weight: 700; text-decoration: none; color: var(--black); text-transform: uppercase; letter-spacing: 0.05em; }
+.nav-links { display: flex; list-style: none; gap: var(--spacing-md); }
+.nav-links a { text-decoration: none; color: var(--black); font-weight: 400; text-transform: uppercase; font-size: 0.875rem; letter-spacing: 0.05em; transition: color 0.2s ease; }
+.nav-links a:hover { color: var(--primary); }
+
+/* Hero */
+.hero { padding: var(--spacing-xl) 0; text-align: center; border-bottom: 1px solid var(--black); }
+.hero-title { margin-bottom: var(--spacing-md); }
+.hero-subtitle { font-size: 1.125rem; color: var(--gray-dark); max-width: 50ch; margin: 0 auto var(--spacing-lg); }
+
+.cta { display: inline-block; padding: var(--spacing-sm) var(--spacing-md); background: var(--primary); color: var(--white); text-decoration: none; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.875rem; transition: all 0.2s ease; }
+.cta:hover { background: var(--black); }
+.cta-group { display: flex; gap: var(--spacing-sm); justify-content: center; flex-wrap: wrap; margin-top: var(--spacing-sm); }
+.cta-outline { background: transparent; color: var(--black); border: 1px solid var(--black); }
+.cta-outline:hover { background: var(--black); color: var(--white); }
+
+/* Sections */
+.section { padding: var(--spacing-xl) 0; }
+.section:nth-child(even) { background: var(--gray-light); }
+.section-header { text-align: center; margin-bottom: var(--spacing-xl); }
+
+/* Grid */
+.grid { display: grid; gap: var(--spacing-lg); }
+.grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.grid-3 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+.grid-4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+
+/* Cards */
+.card { background: var(--white); border: 1px solid var(--black); padding: var(--spacing-md); transition: transform 0.2s ease; }
+.card:hover { transform: translateY(-2px); }
+.card-icon { width: 48px; height: 48px; background: var(--black); color: var(--white); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.5rem; margin-bottom: var(--spacing-sm); }
+.card-primary .card-icon { background: var(--primary); }
+.card-secondary .card-icon { background: var(--secondary); }
+.card-tertiary .card-icon { background: var(--tertiary); color: var(--black); }
+
+/* Methodology */
+.methodology-flow { display: grid; grid-template-columns: 1fr auto 1fr; gap: var(--spacing-md); align-items: center; margin: var(--spacing-xl) 0; }
+.method-card { border: 2px solid var(--black); padding: var(--spacing-md); text-align: center; }
+.method-card.control { border-color: var(--primary); }
+.method-card.systems { border-color: var(--secondary); }
+.method-arrow { font-size: 2rem; font-weight: 700; color: var(--gray-medium); }
+.method-title { color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.875rem; margin-bottom: var(--spacing-sm); }
+.method-card.systems .method-title { color: var(--secondary); }
+
+/* Framework */
+.framework { background: var(--black); color: var(--white); padding: var(--spacing-lg); margin: var(--spacing-xl) 0; }
+.framework-title { color: var(--white); text-align: center; margin-bottom: var(--spacing-lg); }
+.framework-items { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--spacing-md); }
+.framework-item { text-align: center; }
+.framework-icon { width: 64px; height: 64px; border: 2px solid var(--white); margin: 0 auto var(--spacing-sm); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; }
+.framework-item:nth-child(1) .framework-icon { background: var(--primary); border-color: var(--primary); }
+.framework-item:nth-child(2) .framework-icon { background: var(--secondary); border-color: var(--secondary); }
+.framework-item:nth-child(3) .framework-icon { background: var(--tertiary); border-color: var(--tertiary); color: var(--black); }
+.framework-item:nth-child(4) .framework-icon { background: var(--white); border-color: var(--white); color: var(--black); }
+
+/* Artwork cards */
+.artwork-card { border: 1px solid var(--gray-medium); padding: var(--spacing-md); background: var(--white); }
+.artwork-title { color: var(--black); text-transform: uppercase; letter-spacing: 0.05em; font-size: 1rem; margin-bottom: var(--spacing-xs); }
+.artwork-creator { color: var(--gray-medium); font-size: 0.875rem; margin-bottom: var(--spacing-sm); text-transform: uppercase; letter-spacing: 0.05em; }
+.artwork-description { font-size: 0.875rem; line-height: 1.5; margin-bottom: var(--spacing-md); }
+
+/* Link buttons: fixed to fit container */
+.compare-buttons {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--spacing-xs);
+  align-items: stretch;
+  justify-items: stretch;
+}
+
+.compare-btn {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  text-decoration: none;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid;
+  background: var(--white);
+  min-width: 0;              /* allows grid items to shrink */
+  white-space: normal;       /* allow wrapping */
+  word-break: break-word;    /* long words wrap */
+  line-height: 1.25;
+  transition: all 0.2s ease;
+}
+
+.control-btn { border-color: var(--primary); color: var(--primary); }
+.control-btn:hover { background: var(--primary); color: var(--white); }
+.systems-btn { border-color: var(--secondary); color: var(--secondary); }
+.systems-btn:hover { background: var(--secondary); color: var(--white); }
+
+/* Results */
+.results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-md); margin: var(--spacing-xl) 0; }
+.metric-card { text-align: center; padding: var(--spacing-lg); border: 2px solid var(--black); }
+.metric-value { font-size: 3rem; font-weight: 700; color: var(--primary); line-height: 1; margin-bottom: var(--spacing-sm); }
+.metric-label { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+
+/* Findings */
+.findings { background: var(--gray-light); border: 1px solid var(--black); padding: var(--spacing-lg); margin: var(--spacing-xl) 0; }
+.findings-title { text-align: center; margin-bottom: var(--spacing-lg); }
+.findings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--spacing-lg); }
+.finding-item h4 { color: var(--primary); text-transform: uppercase; font-size: 0.875rem; letter-spacing: 0.05em; margin-bottom: var(--spacing-sm); }
+.finding-item:nth-child(2) h4 { color: var(--secondary); }
+.finding-item:nth-child(3) h4 { color: var(--gray-dark); }
+
+/* Footer */
+.footer { border-top: 1px solid var(--black); padding: var(--spacing-lg) 0; text-align: center; }
+.footer-links { display: flex; justify-content: center; gap: var(--spacing-md); margin-bottom: var(--spacing-md); }
+.footer-link { color: var(--black); text-decoration: none; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; transition: color 0.2s ease; }
+.footer-link:hover { color: var(--primary); }
+.footer-credit { font-size: 0.75rem; color: var(--gray-medium); text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* Transitions */
+* { transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease; }
+
+/* Responsive */
+@media (max-width: 1024px) {
+  :root { --spacing-lg: 40px; --spacing-xl: 72px; }
+}
+
+@media (max-width: 768px) {
+  :root { --spacing-lg: 32px; --spacing-xl: 64px; }
+  .nav-links { display: none; }
+  .methodology-flow { grid-template-columns: 1fr; gap: var(--spacing-md); }
+  .method-arrow { transform: rotate(90deg); }
+  .framework-items { grid-template-columns: repeat(2, 1fr); }
+  .compare-buttons { grid-template-columns: 1fr; }
+}
+
     </style>
 </head>
 <body>
@@ -155,181 +277,156 @@
     </div>
   </footer>
 
-  <script>
-    // Use GitHub Pages to render HTML instead of raw content
-    const PAGES_BASE = "https://seansphd.github.io/REConstructs/";
-    const JSON_URL = "https://raw.githubusercontent.com/seansphd/REConstructs/main/Contents.json";
+<script>
+  const PAGES_BASE = "https://seansphd.github.io/REConstructs/";
+  const JSON_URL = "https://raw.githubusercontent.com/seansphd/REConstructs/main/Contents.json";
 
-    // Metadata preserved
-    const artworkMeta = [
-      { key: "nash", title: "ART1", creator: "Katherine Nash, Richard H. Williams", description: "A computer art program helping artists with limited computer knowledge create designs using a grid based ASCII art system." },
-      { key: "barbadillo", title: "Modules/Structures/Relationships", creator: "Manuel Barbadillo", description: "A modular art system using geometric forms arranged in a grid with rotation, reflection, and colour inversion capabilities." },
-      { key: "drever", title: "Field Work 3", creator: "Timothy Drever", description: "A conceptual artwork exploring wave interference and user perception." },
-      { key: "emmet", title: "Transformation Program", creator: "Colin Emmett", description: "A plotter graphics program transforming line drawings through vector interpolation using MAPPER, GANGER, and SHADOW methods." },
-      { key: "meertens", title: "Letter-like Shapes", creator: "Lambert Meertens", description: "A system generating stroke like shapes on a point grid using backtracking while avoiding specific patterns." },
-      { key: "struckyen", title: "Patterns", creator: "Peter Struycken", description: "A system creating patterns from sixteen black and white modules in grids using controlled randomness." },
-      { key: "shirley", title: "Dune Tune", creator: "Robin Shirley, Gus Garside", description: "A computer generated poem using BARD 1D with random word selection and decay based repetition control." },
-      { key: "meyer", title: "Meyer's Diary", creator: "Vicky Meyer", description: "A dynamic program for modular sculpture generating 3D rectangular modules with independent movement." },
-      { key: "mallary", title: "TRPL", creator: "Robert Mallary", description: "A plotter graphics program interpolating between master lines to produce Moiré patterns using incremental constraints." }
-    ];
+  const artworkMeta = [
+    { key: "nash", title: "ART1", creator: "Katherine Nash, Richard H. Williams", description: "A computer art program helping artists with limited computer knowledge create designs using a grid based ASCII art system." },
+    { key: "barbadillo", title: "Modules/Structures/Relationships", creator: "Manuel Barbadillo", description: "A modular art system using geometric forms arranged in a grid with rotation, reflection, and colour inversion capabilities." },
+    { key: "drever", title: "Field Work 3", creator: "Timothy Drever", description: "A conceptual artwork exploring wave interference and user perception." },
+    { key: "emmet", title: "Transformation Program", creator: "Colin Emmett", description: "A plotter graphics program transforming line drawings through vector interpolation using MAPPER, GANGER, and SHADOW methods." },
+    { key: "meertens", title: "Letter-like Shapes", creator: "Lambert Meertens", description: "A system generating stroke like shapes on a point grid using backtracking while avoiding specific patterns." },
+    { key: "struckyen", title: "Patterns", creator: "Peter Struycken", description: "A system creating patterns from sixteen black and white modules in grids using controlled randomness." },
+    { key: "shirley", title: "Dune Tune", creator: "Robin Shirley, Gus Garside", description: "A computer generated poem using BARD 1D with random word selection and decay based repetition control." },
+    { key: "meyer", title: "Meyer's Diary", creator: "Vicky Meyer", description: "A dynamic program for modular sculpture generating 3D rectangular modules with independent movement." },
+    { key: "mallary", title: "TRPL", creator: "Robert Mallary", description: "A plotter graphics program interpolating between master lines to produce Moiré patterns using incremental constraints." }
+  ];
 
-    // Convert any JSON value to a GitHub Pages URL
-    function toPagesUrl(urlOrName) {
-      if (!urlOrName) return null;
-
-      // Fix simple trailing typo
-      if (urlOrName.endsWith(".html.")) urlOrName = urlOrName.slice(0, -1);
-
-      // If it is already a full raw URL, strip to path after /main/
-      if (urlOrName.startsWith("https://raw.githubusercontent.com/")) {
-        const idx = urlOrName.indexOf("/main/");
-        if (idx !== -1) {
-          const rel = urlOrName.slice(idx + "/main/".length);
-          return PAGES_BASE + rel;
-        }
-      }
-
-      // If it is a repo path like "system/html/nash_sys.html"
-      if (!urlOrName.startsWith("http")) {
-        return PAGES_BASE + urlOrName.replace(/^\/+/, "");
-      }
-
-      // Blob or other forms can be normalised similarly
-      const blobIdx = urlOrName.indexOf("/blob/main/");
-      if (blobIdx !== -1) {
-        const rel = urlOrName.slice(blobIdx + "/blob/main/".length);
-        return PAGES_BASE + rel;
-      }
-
-      // Last resort, return as is
-      return urlOrName;
+  function toPagesUrl(urlOrName) {
+    if (!urlOrName) return null;
+    if (urlOrName.endsWith(".html.")) urlOrName = urlOrName.slice(0, -1);
+    if (urlOrName.startsWith("https://raw.githubusercontent.com/")) {
+      const idx = urlOrName.indexOf("/main/");
+      if (idx !== -1) return PAGES_BASE + urlOrName.slice(idx + 6);
     }
+    if (!urlOrName.startsWith("http")) {
+      return PAGES_BASE + urlOrName.replace(/^\/+/, "");
+    }
+    const blobIdx = urlOrName.indexOf("/blob/main/");
+    if (blobIdx !== -1) return PAGES_BASE + urlOrName.slice(blobIdx + 11);
+    return urlOrName;
+  }
 
-    // Case-insensitive helper
-    const lc = s => (s || "").toLowerCase();
+  const lc = s => (s || "").toLowerCase();
 
-    // Find first matching entry from an object of {name: url}
-    function findFirst(obj, stems, requiredTokens = []) {
-      if (!obj) return null;
-      const entries = Object.entries(obj);
-      for (const [name, url] of entries) {
-        const n = lc(name);
-        if (stems.some(stem => n.includes(stem)) && requiredTokens.every(tok => n.includes(tok))) {
-          return toPagesUrl(url);
+  function findFirst(obj, stems, requiredTokens = []) {
+    if (!obj) return null;
+    for (const [name, url] of Object.entries(obj)) {
+      const n = lc(name);
+      if (stems.some(stem => n.includes(stem)) && requiredTokens.every(tok => n.includes(tok))) {
+        return toPagesUrl(url);
+      }
+    }
+    return null;
+  }
+
+  async function loadFromJSON() {
+    const grid = document.getElementById('artworksGrid');
+    grid.innerHTML = "<p>Loading artworks...</p>";
+
+    try {
+      const res = await fetch(JSON_URL, { cache: "no-cache" });
+      const data = await res.json();
+
+      const paperVariants = [
+        "Re:ConstructsPaperISEA2025.pdf",
+        "Re%20ConstructsPaperISEA2025.pdf",
+        "Re%3AConstructsPaperISEA2025.pdf"
+      ];
+      for (const k of paperVariants) {
+        if (data[k]) {
+          const href = toPagesUrl(data[k]);
+          const a1 = document.getElementById("paperLink");
+          const a2 = document.getElementById("paperLinkFooter");
+          if (a1) a1.href = href;
+          if (a2) a2.href = href;
+          break;
         }
       }
-      return null;
-    }
 
-    async function loadFromJSON() {
-      const grid = document.getElementById('artworksGrid');
-      grid.innerHTML = "<p>Loading artworks...</p>";
+      const baselineHtml = data?.baseline?.html || {};
+      const baselineShots = data?.baseline?.screengrab || {};
+      const systemHtml = data?.system?.html || {};
+      const systemShots = data?.system?.screengrab || {};
+      const reports = data?.system?.reports || {};
 
-      try {
-        const res = await fetch(JSON_URL, { cache: "no-cache" });
-        const data = await res.json();
+      const variants = {
+        nash: ["nash"],
+        barbadillo: ["barbadillo"],
+        drever: ["drever"],
+        emmet: ["emmet", "emmett"],
+        meertens: ["meertens"],
+        struckyen: ["struckyen", "stuckyen", "struycken"],
+        shirley: ["shirley"],
+        meyer: ["meyer"],
+        mallary: ["mallary"]
+      };
 
-        // Set paper link if present
-        const paperVariants = [
-          "Re:ConstructsPaperISEA2025.pdf",
-          "Re%20ConstructsPaperISEA2025.pdf",
-          "Re%3AConstructsPaperISEA2025.pdf"
-        ];
-        for (const k of paperVariants) {
-          if (data[k]) {
-            const paperHref = toPagesUrl(data[k]);
-            const paperLink = document.getElementById("paperLink");
-            const paperLinkFooter = document.getElementById("paperLinkFooter");
-            if (paperLink) paperLink.href = paperHref;
-            if (paperLinkFooter) paperLinkFooter.href = paperHref;
-            break;
-          }
-        }
+      const cards = artworkMeta.map(meta => {
+        const stems = variants[meta.key] || [meta.key];
 
-        // Buckets in your JSON
-        const baselineHtml = data?.baseline?.html || {};
-        const baselineShots = data?.baseline?.screengrab || {};
-        const systemHtml = data?.system?.html || {};
-        const systemShots = data?.system?.screengrab || {};
-        const reports = data?.system?.reports || {};
+        const baselineUrl =
+          findFirst(baselineHtml, stems, ["base"]) ||
+          findFirst(systemHtml, stems, ["ctl"]); // fallback
 
-        // Tolerant stems
-        const variants = {
-          nash: ["nash"],
-          barbadillo: ["barbadillo"],
-          drever: ["drever"],
-          emmet: ["emmet", "emmett"],
-          meertens: ["meertens"],
-          struckyen: ["struckyen", "stuckyen", "struycken"],
-          shirley: ["shirley"],
-          meyer: ["meyer"],
-          mallary: ["mallary"]
-        };
+        const systemUrl = findFirst(systemHtml, stems, ["sys"]);
+        const reportUrl = findFirst(reports, stems, []);
+        const basePng = findFirst(baselineShots, stems, []);
+        const sysPng = findFirst(systemShots, stems, []);
 
-        const cards = artworkMeta.map(meta => {
-          const stems = variants[meta.key] || [meta.key];
+        const links = [];
+        if (baselineUrl) links.push(`<a href="${baselineUrl}" class="compare-btn control-btn" target="_blank" rel="noopener">Baseline Version</a>`);
+        if (systemUrl) links.push(`<a href="${systemUrl}" class="compare-btn systems-btn" target="_blank" rel="noopener">Systems Version</a>`);
+        if (reportUrl) links.push(`<a href="${reportUrl}" class="compare-btn" target="_blank" rel="noopener">Report</a>`);
+        if (basePng) links.push(`<a href="${basePng}" class="compare-btn" target="_blank" rel="noopener">Baseline Screenshot</a>`);
+        if (sysPng) links.push(`<a href="${sysPng}" class="compare-btn" target="_blank" rel="noopener">System Screenshot</a>`);
 
-          const controlUrl =
-            findFirst(baselineHtml, stems, ["base"]) ||
-            findFirst(systemHtml, stems, ["ctl"]); // fallback if baseline missing
-
-          const systemUrl = findFirst(systemHtml, stems, ["sys"]);
-          const reportUrl = findFirst(reports, stems, []); // filenames already include report
-          const basePng = findFirst(baselineShots, stems, []);
-          const sysPng = findFirst(systemShots, stems, []);
-
-          const links = [];
-          if (controlUrl) links.push(`<a href="${controlUrl}" class="compare-btn control-btn" target="_blank" rel="noopener">Control HTML</a>`);
-          if (systemUrl) links.push(`<a href="${systemUrl}" class="compare-btn systems-btn" target="_blank" rel="noopener">Systems HTML</a>`);
-          if (reportUrl) links.push(`<a href="${reportUrl}" class="compare-btn" target="_blank" rel="noopener">Report</a>`);
-          if (basePng) links.push(`<a href="${basePng}" class="compare-btn" target="_blank" rel="noopener">Baseline Screenshot</a>`);
-          if (sysPng) links.push(`<a href="${sysPng}" class="compare-btn" target="_blank" rel="noopener">System Screenshot</a>`);
-
-          return `
-            <div class="artwork-card">
-              <h3 class="artwork-title">${meta.title}</h3>
-              <div class="artwork-creator">${meta.creator}</div>
-              <p class="artwork-description">${meta.description}</p>
-              <div class="compare-buttons">
-                ${links.join("") || '<span style="font-size:0.85rem;color:#666;">No files found in JSON for this item</span>'}
-              </div>
+        return `
+          <div class="artwork-card">
+            <h3 class="artwork-title">${meta.title}</h3>
+            <div class="artwork-creator">${meta.creator}</div>
+            <p class="artwork-description">${meta.description}</p>
+            <div class="compare-buttons">
+              ${links.join("") || '<span style="font-size:0.85rem;color:#666;">No files found in JSON for this item</span>'}
             </div>
-          `;
-        });
-
-        grid.innerHTML = cards.join("");
-        initAnimations();
-      } catch (err) {
-        console.error(err);
-        grid.innerHTML = "<p>Could not load repository contents.</p>";
-      }
-    }
-
-    // Smooth scroll
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-      a.addEventListener('click', e => {
-        if (a.getAttribute('href') === '#') return;
-        e.preventDefault();
-        const t = document.querySelector(a.getAttribute('href'));
-        if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          </div>
+        `;
       });
-    });
 
-    // Animations
-    function initAnimations() {
-      const cards = document.querySelectorAll('.card, .artwork-card');
-      const obs = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            gsap.fromTo(entry.target, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" });
-          }
-        });
-      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-      cards.forEach(c => obs.observe(c));
+      grid.innerHTML = cards.join("");
+      initAnimations();
+    } catch (err) {
+      console.error(err);
+      grid.innerHTML = "<p>Could not load repository contents.</p>";
     }
+  }
 
-    document.addEventListener('DOMContentLoaded', loadFromJSON);
-  </script>
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      if (a.getAttribute('href') === '#') return;
+      e.preventDefault();
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  function initAnimations() {
+    const cards = document.querySelectorAll('.card, .artwork-card');
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          gsap.fromTo(entry.target, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" });
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    cards.forEach(c => obs.observe(c));
+  }
+
+  document.addEventListener('DOMContentLoaded', loadFromJSON);
+</script>
+
 </body>
 </html>
+
 
