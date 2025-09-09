@@ -1,0 +1,7 @@
+Systems Group: Prompt 2 -> Text excerpt -> Claude 3.5 Sonnet = Systems Report 
+               Prompt 1 + Systems Report -> Claude 3.5 Sonnet = Web App 
+
+Prompt 1
+ “Read this text and think through what is happening step by step. Use what you have understood to create an example of the underlying algorithm described at work using HTML and vanilla javascript. Explain in the code how you have tried to replicate the system faithfully and when you have had to adapt.”
+Prompt 2
+ “Read this text and think through what is happening step by step. Write me a report that explains the system described, through its Components, Input Mechanisms and Feedback Loops, also try to understand what if any Emergent qualities there are.”
