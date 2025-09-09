@@ -11,6 +11,30 @@
 /* Reset */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+      .method-figure {
+  margin: var(--spacing-xl) 0;
+  text-align: center;
+}
+
+.method-image {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--black);
+}
+
+.method-caption {
+  font-size: 0.875rem;
+  color: var(--gray-medium);
+  margin-top: var(--spacing-xs);
+}
+
+.method-caption a {
+  color: var(--black);
+  text-decoration: underline;
+}
+
+      
+      
 /* Theme */
 :root {
   --primary: #ff0000;
@@ -204,7 +228,7 @@ p  { font-size: 1rem; line-height: 1.6; margin-bottom: var(--spacing-sm); }
   <section class="hero">
     <div class="container">
       <h1 class="hero-title">Re:Constructs</h1>
-      <p class="hero-subtitle">Improving Historical Algorithm Recreation Through Systems Thinking</p>
+      <p class="hero-subtitle">Reinterpreting lost computer art through auditable AI curation.</p>
       <div class="cta-group">
         <a href="#research" class="cta">Explore Research</a>
         <a id="paperLink" class="cta cta-outline" target="_blank" rel="noopener">Full Paper (PDF)</a>
@@ -217,7 +241,7 @@ p  { font-size: 1rem; line-height: 1.6; margin-bottom: var(--spacing-sm); }
     <div class="container">
       <div class="section-header">
         <h2>Research</h2>
-        <p class="lead">This study investigates whether systems thinking principles can improve the accuracy of large language models in recreating historical computer art algorithms from PAGE magazine, 1969 to 1974.</p>
+        <p class="lead">Re:Constructs is an experiment using generative AI to reinterpret lost computer art, formalizing reinterpretation as an auditable curatorial practice. By embedding curatorial perspectives into AI prompts, the project creates situated reconstructions that reveal interpretive choices and contribute to a record of multiple versions of meaning from surviving fragments.</p>
       </div>
       <div class="grid grid-3">
         <div class="card"><h3>Systems Thinking</h3><p>Decomposing algorithms into components, variables, interactions, and feedback loops to capture artistic intent.</p></div>
@@ -227,20 +251,34 @@ p  { font-size: 1rem; line-height: 1.6; margin-bottom: var(--spacing-sm); }
     </div>
   </section>
 
-  <!-- Methodology -->
-  <section id="methodology" class="section">
-    <div class="container">
-      <div class="section-header">
-        <h2>Methodology</h2>
-        <p class="lead">Two distinct approaches tested to recreate nine historical computer artworks</p>
-      </div>
-      <div class="grid grid-3">
-        <div class="card"><h3>Control Group</h3><p>Direct input of original PAGE magazine descriptions to AI. Focus on technical precision.</p></div>
-        <div class="card"><h3>Systems Group</h3><p>Two stage process. Restructure with systems thinking, then recreate. Focus on conceptual relationships.</p></div>
-        <div class="card"><h3>Framework</h3><p>Components, inputs, feedback, and emergence are used as the organising schema.</p></div>
-      </div>
+<!-- Methodology -->
+<section id="methodology" class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Methodology</h2>
+      <p class="lead">Two distinct approaches tested to recreate nine historical computer artworks</p>
     </div>
-  </section>
+
+    <figure class="method-figure">
+      <img
+        src="Baseline%26SystemMethods.png"
+        alt="Diagram of the Baseline and Systems methods used in the study"
+        class="method-image"
+      >
+      <figcaption class="method-caption">
+        Overview of the Baseline and Systems methods.
+        <a href="Baseline%26SystemMethods.png" target="_blank" rel="noopener">Open full size</a>
+      </figcaption>
+    </figure>
+
+    <div class="grid grid-3">
+      <div class="card"><h3>Control Group</h3><p>Direct input of original PAGE magazine descriptions to AI. Focus on technical precision.</p></div>
+      <div class="card"><h3>Systems Group</h3><p>Two stage process. Restructure with systems thinking, then recreate. Focus on conceptual relationships.</p></div>
+      <div class="card"><h3>Framework</h3><p>Components, inputs, feedback, and emergence are used as the organising schema.</p></div>
+    </div>
+  </div>
+</section>
+
 
   <!-- Artworks -->
   <section id="artworks" class="section">
@@ -283,7 +321,7 @@ p  { font-size: 1rem; line-height: 1.6; margin-bottom: var(--spacing-sm); }
 
   const artworkMeta = [
     { key: "nash", title: "ART1", creator: "Katherine Nash, Richard H. Williams", description: "A computer art program helping artists with limited computer knowledge create designs using a grid based ASCII art system." },
-    { key: "barbadillo", title: "Modules/Structures/Relationships", creator: "Manuel Barbadillo", description: "A modular art system using geometric forms arranged in a grid with rotation, reflection, and colour inversion capabilities." },
+    { key: "barbadillo", title: "Modules", creator: "Manuel Barbadillo", description: "A modular art system using geometric forms arranged in a grid with rotation, reflection, and colour inversion capabilities." },
     { key: "drever", title: "Field Work 3", creator: "Timothy Drever", description: "A conceptual artwork exploring wave interference and user perception." },
     { key: "emmet", title: "Transformation Program", creator: "Colin Emmett", description: "A plotter graphics program transforming line drawings through vector interpolation using MAPPER, GANGER, and SHADOW methods." },
     { key: "meertens", title: "Letter-like Shapes", creator: "Lambert Meertens", description: "A system generating stroke like shapes on a point grid using backtracking while avoiding specific patterns." },
@@ -428,5 +466,4 @@ p  { font-size: 1rem; line-height: 1.6; margin-bottom: var(--spacing-sm); }
 
 </body>
 </html>
-
 
