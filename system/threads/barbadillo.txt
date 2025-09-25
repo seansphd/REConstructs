@@ -1,1 +1,22 @@
+I'll help you create a web application that demonstrates Barbadillo's modular artwork system using pure HTML, CSS, and JavaScript.Barbadillo Modular Art SystemInteractive artifact I've created a web application that demonstrates Barbadillo's modular art system. Here's what you can do with it:
 
+The grid shows a 4x4 arrangement of different module types (a, b, c, d)
+Click any module to select it (it will be highlighted with a blue outline)
+Use the controls to:
+
+Rotate the selected module 90 degrees
+Mirror the selected module horizontally
+Invert the colors of the selected module
+
+
+Change the primary and background colors using the color pickers
+
+Key features implemented from Barbadillo's system:
+
+Fixed Constants: Square grid structure and basic module shapes
+Variables: Module position, rotation, reflection, and color inversion
+Interaction: Modules align within the grid and can create patterns through manipulation
+Feedback: Visual feedback through immediate updates when making changes
+Emergence: Complex patterns emerge as you manipulate multiple modules
+
+Feel free to experiment with different combinations! Would you like me to explain any part of the implementation in more detail or make any adjustments to the system?
