@@ -1,1 +1,31 @@
+I'll create a simpler 2D visualization using just vanilla JavaScript and the HTML5 Canvas API to demonstrate the wave interference pattern.Three-Wave Interference Pattern - Vanilla JSInteractive artifact I've created a pure vanilla JavaScript implementation using the HTML Canvas API. This version includes several features that demonstrate the wave interference pattern described in the paper:
+
+Interactive Controls:
+
+Wave Amplitude: Adjust the height of the waves
+Wavelength: Change the distance between wave peaks
+Animation Speed: Control how fast the waves move
+Show Nodes: Toggle visibility of the nodal points
+Show Wave Lines: Toggle the visibility of the wave direction lines
+Color Mode: Switch between color and grayscale visualization
+
+
+Navigation Features:
+
+Click and drag to pan around the pattern
+Mouse wheel to zoom in/out
+The visualization automatically centers on the screen
+
+
+Key Aspects from the Paper:
+
+Shows the interference pattern of three wave trains at 120-degree angles
+Visualizes the nodes (points of zero amplitude) in red when enabled
+Shows the underlying wave directions with optional grid lines
+Uses color or grayscale to represent wave heights
+
+
+
+The visualization uses the same mathematical principles described in the paper:
+
 
