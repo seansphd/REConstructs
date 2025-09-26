@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Letter-Like Shapes Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .canvas-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        canvas {
+            border: 1px solid #ccc;
+            display: block;
+            margin: 20px auto;
+        }
+        .controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            background: #4CAF50;
+            colour: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .debug {
+            margin-top: 10px;
+            padding: 10px;
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Letter-Like Shapes Generator</h1>
+    
+    <div class="controls">
+        <button onclick="generateNewShape()">Generate New Shape</button>
+        <button onclick="debug()">Debug Info</button>
+        <button onclick="downloadCanvas()">Download as PNG</button>
+    </div>
+
+    <div class="canvas-container">
+        <canvas id="shapeCanvas" width="400" height="400"></canvas>
+    </div>
+
+    <div id="debugInfo" class="debug" style="display: none;"></div>
+
+    <script>
+        const canvas = document.getElementById('shapeCanvas');
+        const ctx = canvas.getContext('2d');
+        let debugOutput = document.getElementById('debugInfo');
+
+        class ShapeGenerator {
+            constructor(canvas, ctx) {
+                this.canvas = canvas;
+                this.ctx = ctx;
+                this.gridSize = 5;
+                this.cellSize = 60;
+                this.margin = 50;
+                this.strokeWidth = 20;
+                this.points = [];
+                this.visited = new Array(this.gridSize * this.gridSize).fill(false);
+            }
+
+            initialize() {
+                this.ctx.fillStyle = 'white';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                this.points = [];
+                for (let y = 0; y < this.gridSize; y++) {
+                    for (let x = 0; x < this.gridSize; x++) {
+                        this.points.push({
+                            x: x * this.cellSize + this.margin,
+                            y: y * this.cellSize + this.margin
+                        });
+                    }
+                }
+                this.visited.fill(false);
+            }
+
+            drawShape() {
+                this.initialize();
+
+                let currentIndex = Math.floor(Math.random() * this.points.length);
+                let path = [currentIndex];
+                this.visited[currentIndex] = true;
+
+                while (path.length < this.points.length) {
+                    let neighbors = this.getValidNeighbors(currentIndex);
+                    if (neighbors.length === 0) break;
+
+                    let nextIndex = neighbors[Math.floor(Math.random() * neighbors.length)];
+                    path.push(nextIndex);
+                    this.visited[nextIndex] = true;
+                    currentIndex = nextIndex;
+                }
+
+                this.ctx.beginPath();
+                this.ctx.strokeStyle = 'black';
+                this.ctx.lineWidth = this.strokeWidth;
+                this.ctx.lineCap = 'round';
+                this.ctx.lineJoin = 'round';
+
+                let startPoint = this.points[path[0]];
+                this.ctx.moveTo(startPoint.x, startPoint.y);
+
+                for (let i = 1; i < path.length; i++) {
+                    let point = this.points[path[i]];
+                    this.ctx.lineTo(point.x, point.y);
+                }
+
+                this.ctx.lineTo(startPoint.x, startPoint.y);
+                this.ctx.stroke();
+
+                return {
+                    pathLength: path.length,
+                    totalPoints: this.points.length
+                };
+            }
+
+            getValidNeighbors(currentIndex) {
+                let neighbors = [];
+                let x = currentIndex % this.gridSize;
+                let y = Math.floor(currentIndex / this.gridSize);
+
+                for (let dx = -1; dx <= 1; dx++) {
+                    for (let dy = -1; dy <= 1; dy++) {
+                        if (dx === 0 && dy === 0) continue;
+
+                        let newX = x + dx;
+                        let newY = y + dy;
+                        let newIndex = newY * this.gridSize + newX;
+
+                        if (newX >= 0 && newX < this.gridSize &&
+                            newY >= 0 && newY < this.gridSize &&
+                            !this.visited[newIndex] &&
+                            !this.wouldCreateSquare(x, y, newX, newY)) {
+                            neighbors.push(newIndex);
+                        }
+                    }
+                }
+
+                return neighbors;
+            }
+
+            wouldCreateSquare(x1, y1, x2, y2) {
+                let dx = x2 - x1;
+                let dy = y2 - y1;
+
+                if (Math.abs(dx) !== 1 || Math.abs(dy) !== 1) return false;
+
+                return (
+                    this.isVisited(x1, y1 + dy) && this.isVisited(x2, y1) ||
+                    this.isVisited(x1 + dx, y1) && this.isVisited(x1, y2)
+                );
+            }
+
+            isVisited(x, y) {
+                if (x < 0 || x >= this.gridSize || y < 0 || y >= this.gridSize) return false;
+                return this.visited[y * this.gridSize + x];
+            }
+        }
+
+        let generator = new ShapeGenerator(canvas, ctx);
+
+        function generateNewShape() {
+            let result = generator.drawShape();
+            console.log(`Generated shape with ${result.pathLength} points out of ${result.totalPoints}`);
+        }
+
+        function debug() {
+            debugOutput.style.display = debugOutput.style.display === 'none' ? 'block' : 'none';
+            debugOutput.innerHTML = `
+                Canvas size: ${canvas.width}x${canvas.height}<br>
+                Grid size: ${generator.gridSize}x${generator.gridSize}<br>
+                Cell size: ${generator.cellSize}<br>
+                Points: ${generator.points.length}
+            `;
+        }
+
+        function downloadCanvas() {
+            const link = document.createElement('a');
+            link.download = 'letter-like-shape.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        generateNewShape();
+    </script>
+</body>
+</html>
