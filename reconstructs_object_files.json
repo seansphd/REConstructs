@@ -1,0 +1,173 @@
+[
+    {
+        "object_id": "RC-ART1-1970",
+        "source_record_refs": "PAGE 007, Nash & Williams documentation",
+        "systems_rubric": {
+            "components": "ASCII grid, shape primitives",
+            "inputs": "data cards",
+            "feedback": "overprint, arrays",
+            "emergence": "quadrant mirroring"
+        },
+        "prompt_scaffold": {
+            "baseline_prompt": "Using only the PAGE description, reconstruct the artwork as best you can in HTML/JavaScript without additional scaffolding.",
+            "systems_prompt": "Reconstruct the artwork using the PAGE description scaffolded with a systems-thinking rubric (components, inputs, feedback, emergence). Express the system logic in HTML/JavaScript code."
+        },
+        "model_snapshot": "Claude Sonnet 3.5, June 2024",
+        "code_artifacts": "HTML/JavaScript reconstructions (baseline & systems)",
+        "evaluation_protocol": "Algorithmic logic, Visual clarity, User interactivity (1\u20135 scale)",
+        "decision_log": "Chose to privilege system as object; excluded INIT/PRINT ritual",
+        "forks_lineage": "Baseline (Sept 2023) \u2192 Systems (Sept 2023); GitHub repo forks"
+    },
+    {
+        "object_id": "RC-MeyerDiary-1972",
+        "source_record_refs": "PAGE 027, Vicky Meyer \u2018Diary: October 1972\u2019",
+        "systems_rubric": {
+            "components": "rectangular modules",
+            "inputs": "harmonic trajectories",
+            "feedback": "Z-dimming",
+            "emergence": "unpredictable module interaction"
+        },
+        "prompt_scaffold": {
+            "baseline_prompt": "Using only the PAGE description, reconstruct the artwork as best you can in HTML/JavaScript without additional scaffolding.",
+            "systems_prompt": "Reconstruct the artwork using the PAGE description scaffolded with a systems-thinking rubric (components, inputs, feedback, emergence). Express the system logic in HTML/JavaScript code."
+        },
+        "model_snapshot": "Claude Sonnet 3.5, June 2024",
+        "code_artifacts": "HTML/JavaScript trajectories, diary reconstructions",
+        "evaluation_protocol": "Algorithmic logic, Visual clarity, User interactivity",
+        "decision_log": "Retained baseline/systems despite weak sound coupling",
+        "forks_lineage": "Baseline (Oct 2023) \u2192 Systems (Oct 2023); GitHub repo forks"
+    },
+    {
+        "object_id": "RC-DuneTune-1972",
+        "source_record_refs": "PAGE 021, Robin Shirley \u2018Dune Tune\u2019",
+        "systems_rubric": {
+            "components": "sound oscillators",
+            "inputs": "parameters of tone",
+            "feedback": "wave interference",
+            "emergence": "shifting rhythmic forms"
+        },
+        "prompt_scaffold": {
+            "baseline_prompt": "Using only the PAGE description, reconstruct the artwork as best you can in HTML/JavaScript without additional scaffolding.",
+            "systems_prompt": "Reconstruct the artwork using the PAGE description scaffolded with a systems-thinking rubric (components, inputs, feedback, emergence). Express the system logic in HTML/JavaScript code."
+        },
+        "model_snapshot": "Claude Sonnet 3.5, June 2024",
+        "code_artifacts": "HTML/JavaScript sound visualisation sketches",
+        "evaluation_protocol": "Algorithmic logic, Visual clarity, User interactivity",
+        "decision_log": "Chose not to simulate original analogue sound hardware",
+        "forks_lineage": "Baseline (Oct 2023) \u2192 Systems (Oct 2023); GitHub repo forks"
+    },
+    {
+        "object_id": "RC-FieldWork-1971",
+        "source_record_refs": "PAGE 023, Timothy Drever \u2018Field Work\u2019",
+        "systems_rubric": {
+            "components": "interference wave modules",
+            "inputs": "oscillator values",
+            "feedback": "overlapping sine patterns",
+            "emergence": "moir\u00e9 effects"
+        },
+        "prompt_scaffold": {
+            "baseline_prompt": "Using only the PAGE description, reconstruct the artwork as best you can in HTML/JavaScript without additional scaffolding.",
+            "systems_prompt": "Reconstruct the artwork using the PAGE description scaffolded with a systems-thinking rubric (components, inputs, feedback, emergence). Express the system logic in HTML/JavaScript code."
+        },
+        "model_snapshot": "Claude Sonnet 3.5, June 2024",
+        "code_artifacts": "HTML/JavaScript interference pattern generators",
+        "evaluation_protocol": "Algorithmic logic, Visual clarity, User interactivity",
+        "decision_log": "Foregrounded emergence as core artistic logic",
+        "forks_lineage": "Baseline (Oct 2023) \u2192 Systems (Oct 2023); GitHub repo forks"
+    },
+    {
+        "object_id": "RC-LetterLike-1971",
+        "source_record_refs": "PAGE 030, Lambert Meertens \u2018Letter Like Shapes\u2019",
+        "systems_rubric": {
+            "components": "typographic modules",
+            "inputs": "character placement",
+            "feedback": "overlapping routines",
+            "emergence": "pseudo-textual patterns"
+        },
+        "prompt_scaffold": {
+            "baseline_prompt": "Using only the PAGE description, reconstruct the artwork as best you can in HTML/JavaScript without additional scaffolding.",
+            "systems_prompt": "Reconstruct the artwork using the PAGE description scaffolded with a systems-thinking rubric (components, inputs, feedback, emergence). Express the system logic in HTML/JavaScript code."
+        },
+        "model_snapshot": "Claude Sonnet 3.5, June 2024",
+        "code_artifacts": "HTML/JavaScript letter-shape reconstruction",
+        "evaluation_protocol": "Algorithmic logic, Visual clarity, User interactivity",
+        "decision_log": "Chose not to overfit glyph accuracy, prioritised systemic behaviour",
+        "forks_lineage": "Baseline (Oct 2023) \u2192 Systems (Oct 2023); GitHub repo forks"
+    },
+    {
+        "object_id": "RC-Modules-1970",
+        "source_record_refs": "PAGE 035, Manuel Barbadillo \u2018Modules\u2019",
+        "systems_rubric": {
+            "components": "geometric modules",
+            "inputs": "combinatorial parameters",
+            "feedback": "recursive grid construction",
+            "emergence": "complex structures"
+        },
+        "prompt_scaffold": {
+            "baseline_prompt": "Using only the PAGE description, reconstruct the artwork as best you can in HTML/JavaScript without additional scaffolding.",
+            "systems_prompt": "Reconstruct the artwork using the PAGE description scaffolded with a systems-thinking rubric (components, inputs, feedback, emergence). Express the system logic in HTML/JavaScript code."
+        },
+        "model_snapshot": "Claude Sonnet 3.5, June 2024",
+        "code_artifacts": "HTML/JavaScript grid combinatorial systems",
+        "evaluation_protocol": "Algorithmic logic, Visual clarity, User interactivity",
+        "decision_log": "Preserved modular logic even where visuals diverged",
+        "forks_lineage": "Baseline (Oct 2023) \u2192 Systems (Oct 2023); GitHub repo forks"
+    },
+    {
+        "object_id": "RC-Patterns-1971",
+        "source_record_refs": "PAGE 042, Peter Struckyen \u2018Patterns\u2019",
+        "systems_rubric": {
+            "components": "rule-based visual patterns",
+            "inputs": "parameter sequences",
+            "feedback": "repetition/variation cycles",
+            "emergence": "evolving motifs"
+        },
+        "prompt_scaffold": {
+            "baseline_prompt": "Using only the PAGE description, reconstruct the artwork as best you can in HTML/JavaScript without additional scaffolding.",
+            "systems_prompt": "Reconstruct the artwork using the PAGE description scaffolded with a systems-thinking rubric (components, inputs, feedback, emergence). Express the system logic in HTML/JavaScript code."
+        },
+        "model_snapshot": "Claude Sonnet 3.5, June 2024",
+        "code_artifacts": "HTML/JavaScript generative pattern sketches",
+        "evaluation_protocol": "Algorithmic logic, Visual clarity, User interactivity",
+        "decision_log": "Noted model drift in repeating subpatterns",
+        "forks_lineage": "Baseline (Oct 2023) \u2192 Systems (Oct 2023); GitHub repo forks"
+    },
+    {
+        "object_id": "RC-Transform-1971",
+        "source_record_refs": "PAGE 046, Colin Emmet \u2018Transformation Programme\u2019",
+        "systems_rubric": {
+            "components": "transformational rules",
+            "inputs": "shape sequences",
+            "feedback": "recursive transformations",
+            "emergence": "novel shapes"
+        },
+        "prompt_scaffold": {
+            "baseline_prompt": "Using only the PAGE description, reconstruct the artwork as best you can in HTML/JavaScript without additional scaffolding.",
+            "systems_prompt": "Reconstruct the artwork using the PAGE description scaffolded with a systems-thinking rubric (components, inputs, feedback, emergence). Express the system logic in HTML/JavaScript code."
+        },
+        "model_snapshot": "Claude Sonnet 3.5, June 2024",
+        "code_artifacts": "HTML/JavaScript transformation system reconstructions",
+        "evaluation_protocol": "Algorithmic logic, Visual clarity, User interactivity",
+        "decision_log": "Prioritised transformation logic over final image fidelity",
+        "forks_lineage": "Baseline (Oct 2023) \u2192 Systems (Oct 2023); GitHub repo forks"
+    },
+    {
+        "object_id": "RC-TRPL-1974",
+        "source_record_refs": "PAGE 052, Robert Mallory \u2018TRPL\u2019",
+        "systems_rubric": {
+            "components": "procedural rules",
+            "inputs": "parameterised functions",
+            "feedback": "recursive layering",
+            "emergence": "unpredictable structural forms"
+        },
+        "prompt_scaffold": {
+            "baseline_prompt": "Using only the PAGE description, reconstruct the artwork as best you can in HTML/JavaScript without additional scaffolding.",
+            "systems_prompt": "Reconstruct the artwork using the PAGE description scaffolded with a systems-thinking rubric (components, inputs, feedback, emergence). Express the system logic in HTML/JavaScript code."
+        },
+        "model_snapshot": "Claude Sonnet 3.5, June 2024",
+        "code_artifacts": "HTML/JavaScript TRPL reconstruction sketches",
+        "evaluation_protocol": "Algorithmic logic, Visual clarity, User interactivity",
+        "decision_log": "Maintained multiple divergent reconstructions to evidence interpretive multiplicity",
+        "forks_lineage": "Baseline (Oct 2023) \u2192 Systems (Oct 2023); GitHub repo forks"
+    }
+]
