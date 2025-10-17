@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Designing Letter-Like Shapes – Lambert Meertens</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+      line-height: 1.6;
+      color: #222;
+    }
+    h1 {
+      font-size: 1.8em;
+      margin-bottom: 0.2em;
+    }
+    h2 {
+      font-size: 1.2em;
+      color: #555;
+      margin-top: 0;
+      margin-bottom: 1em;
+    }
+    a.button-link {
+      display: inline-block;
+      padding: 10px 15px;
+      background: #004aad;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      margin-bottom: 1.5em;
+    }
+    a.button-link:hover {
+      background: #00337a;
+    }
+  </style>
+</head>
+<body>
+
+  <a href="https://computer-arts-society.com/casarchive/cas/uploads/page-17.pdf" class="button-link" target="_blank">
+    View PAGE 17 PDF
+  </a>
+
+  <h1>Designing Letter-Like Shapes</h1>
+  <h2>Lambert Meertens (Netherlands), c. 1970</h2>
+
+  <p>Lambert Meertens explored why unfamiliar alphabets often appear aesthetically pleasing, noting how they can seem both strikingly different from known letterforms and subtly similar to each other. His aim was to understand and eventually generate such “alphabet-like” shapes computationally, with each new set offering an element of surprise.</p>
+
+  <p>Meertens’ approach was based on identifying structural rules that governed the forms. The shapes could be conceived as arrangements of squares with no four touching at a single point, no holes, and all parts connected — conditions applying equally to the shape and its negative space. The problem was how to generate such forms systematically. The breakthrough came when he recognised that the shapes could be derived from a minimum-distance closed tour visiting every point in a rectangular grid with an even number of points. Each tour corresponded exactly to one of the valid shapes.</p>
+
+  <p>Working from this principle, a program written in ALGOL 60 by 17-year-old Michiel Baron used a backtracking method to find all possible tours for a given grid size. The complete set of solutions for a 5×6 grid, generated on an Electrologica X8 computer at the Mathematical Centre, was computed and drawn in seven minutes. This method provided both a precise mathematical model and an open-ended visual system for designing abstract, letter-like forms.</p>
+
+  <p><a href="https://computer-arts-society.com/casarchive/cas/uploads/page-17.pdf" target="_blank">Read more in PAGE 17 (1970): Computer Arts Society Archive – PAGE 17</a></p>
+
+</body>
+</html>
